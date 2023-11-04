@@ -20,17 +20,6 @@ class Game extends Phaser.Scene {
   }
 
   create() {
-    this.physics.world.setBounds(
-      0,
-      0,
-      config.width,
-      config.height,
-      true,
-      true,
-      true,
-      false
-    );
-
     // TODO: make this repeatable so we can reset ball on end of turn
     const centerX = this.cameras.main.width / 2;
     const ballWidth = 15;
@@ -97,7 +86,7 @@ class Game extends Phaser.Scene {
   }
 }
 
-const config = {
+const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   backgroundColor: "#000000",
   width: 800,
@@ -105,6 +94,15 @@ const config = {
   scene: [Preloader, Game],
   physics: {
     default: "arcade",
+    arcade: {
+      // alternatively, set in scene create with this.physics.world.setBounds
+      checkCollision: {
+        up: true,
+        down: false,
+        left: true,
+        right: true,
+      },
+    },
   },
 };
 
