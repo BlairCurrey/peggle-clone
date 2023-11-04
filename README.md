@@ -13,8 +13,9 @@ Can test build by running `dist/index.html` on a local server (such as VScode li
   - index.html should be outside dist and copied in
   - not sure about game.js.map and game.js (why does it look different than dev/watch output?)
 - [ ] ball sprite/logic should be seperated from scene (make own class?)
+- [ ] new scene dir with Preloader and Game. needs to be supported in rollup (currently only supports output of src/game.ts specifically)
 
-## alpha
+## alpha features
 
 - [x] ball with aimer can be shot in direction of aimer
 - [x] aimer boundaries (no aiming up for example)
@@ -28,8 +29,9 @@ Can test build by running `dist/index.html` on a local server (such as VScode li
 - [ ] ball is "gone" when it hits bottom of screen
 - [ ] when ball is "gone" a new ball loads up top (and cannot shoot before this point)
 - [ ] there is some ball limit (3, 5?) and game over when limit is 0 and turn is over
+- [x] "Preloader" scene to preload all assets, then "Game" scene https://youtu.be/z15L4E7A3wY?si=HRf457MpaxG0EbKl&t=318
 
-## beta
+## beta featrures
 
 - [ ] aimer can also be controlled with mouse and fired with click
 - [ ] can gain points by hitting a block (1 point per block)

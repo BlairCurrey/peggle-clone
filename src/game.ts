@@ -1,12 +1,22 @@
 import * as Phaser from "phaser";
 
-export default class Level1 extends Phaser.Scene {
+class Preloader extends Phaser.Scene {
   constructor() {
-    super("level1");
+    super("preloader");
   }
 
   preload() {
     this.load.image("ball", "assets/ball.png");
+  }
+
+  create() {
+    this.scene.start("game");
+  }
+}
+
+class Game extends Phaser.Scene {
+  constructor() {
+    super("game");
   }
 
   create() {
@@ -92,7 +102,7 @@ const config = {
   backgroundColor: "#000000",
   width: 800,
   height: 600,
-  scene: [Level1],
+  scene: [Preloader, Game],
   physics: {
     default: "arcade",
   },
