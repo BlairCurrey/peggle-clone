@@ -12,10 +12,12 @@ Can test build by running `dist/index.html` on a local server (such as VScode li
   - asset should be outside dist and copied in
   - index.html should be outside dist and copied in
   - not sure about game.js.map and game.js (why does it look different than dev/watch output?)
-- [ ] ball sprite/logic should be seperated from scene (make own class?)
+- [x] ball sprite/logic should be seperated from scene (make own class?)
+- [ ] peg sprite/logic should be seperated from scene
 - [ ] new scene dir with Preloader and Game. needs to be supported in rollup (currently only supports output of src/game.ts specifically)
 - [ ] make pegs smaller (but make sure its visible)
 - [ ] fix peg hitbox to match sprite
+- [ ] fix ball hitbox to match sprite (currently square)
 
 ## alpha features
 
@@ -30,7 +32,7 @@ Can test build by running `dist/index.html` on a local server (such as VScode li
 - [x] ball bounces off walls
 - [x] objects disappear when hit by ball
 - [x] add delay to objects disappearing when hit by ball
-- [ ] ball is "gone" when it hits bottom of screen
+- [ ] ball is destroyed when it hits bottom of screen
 - [ ] when ball is "gone" a new ball loads up top (and cannot shoot before this point)
 - [ ] there is some ball limit (3, 5?) and game over when limit is 0 and turn is over
 - [x] "Preloader" scene to preload all assets, then "Game" scene https://youtu.be/z15L4E7A3wY?si=HRf457MpaxG0EbKl&t=318

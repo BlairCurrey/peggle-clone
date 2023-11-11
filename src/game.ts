@@ -1,4 +1,6 @@
 import * as Phaser from "phaser";
+import { Ball } from "./Ball";
+import { spriteConfig } from "./spriteConfig";
 
 class Preloader extends Phaser.Scene {
   constructor() {
@@ -6,11 +8,8 @@ class Preloader extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image("ball", "assets/ball.png");
-    this.load.image("peg1", "assets/peg1.png");
-    this.load.image("peg2", "assets/peg2.png");
-    this.load.image("peg3", "assets/peg3.png");
-    this.load.image("peg4", "assets/peg4.png");
+    this.load.image(spriteConfig.ball.key, spriteConfig.ball.path);
+    this.load.image(spriteConfig.peg2.key, spriteConfig.peg2.path);
   }
 
   create() {
@@ -44,29 +43,9 @@ class Game extends Phaser.Scene {
     makePeg(pegs, 300, 300, "peg2");
     makePeg(pegs, 215, 350, "peg2");
 
-    // const peg = pegs.create(300, 300, "peg2");
-    // const pegWidth = 20;
-    // peg.setScale(pegWidth / peg.width, pegWidth / peg.height);
-    // peg.body.setCircle(pegWidth);
-    // peg.setImmovable(true);
-    // const peg2 = pegs.create(215, 350, "peg2");
-    // peg2.setScale(pegWidth / peg.width, pegWidth / peg.height);
-    // peg2.body.setCircle(pegWidth);
-    // peg2.setImmovable(true);
+    const ball = new Ball(this);
 
-    // TODO: make this repeatable so we can reset ball on end of turn
-    const centerX = this.cameras.main.width / 2;
-    const ballWidth = 15;
-    const ballStartX = centerX - ballWidth / 2;
-    const ballStarty = ballWidth + 1;
-    const ball = this.physics.add.sprite(ballStartX, ballStarty, "ball");
-    ball.setScale(ballWidth / ball.width, ballWidth / ball.height);
-    ball.body.setCircle(ballWidth * 2);
-    ball.setBounce(1).setCollideWorldBounds(true);
-    // TODO: best way to do this?
-    ball.setDrag(0.99);
-
-    const handleCollision = (ball, peg) => {
+    const handleBallPegCollision = (ball, peg) => {
       // Add a 2-second delay before destroying the peg using setTimeout
       setTimeout(() => {
         // Create a fade-out animation for the peg
@@ -81,63 +60,7 @@ class Game extends Phaser.Scene {
         });
       }, 2000);
     };
-
-    this.physics.add.collider(ball, pegs, handleCollision);
-
-    // Create a line for aiming
-    const aimingLine = this.add.graphics();
-    aimingLine.lineStyle(2, 0xffffff); // Adjust line style as needed
-
-    // Aiming angle
-    let aimingAngle = 0; // increment this to move the aiming line
-    // use adjustedAimingAngle to draw the line and set velocity
-    const adjustedAimingAngle = () => aimingAngle + Math.PI / 2;
-
-    const updateAim = () => {
-      aimingLine.clear();
-      aimingLine.lineStyle(2, 0xff0000);
-      aimingLine.beginPath();
-      aimingLine.moveTo(ball.x, ball.y);
-      const lineLength = 50;
-      const x2 = ball.x + lineLength * Math.cos(adjustedAimingAngle());
-      const y2 = ball.y + lineLength * Math.sin(adjustedAimingAngle());
-      aimingLine.lineTo(x2, y2);
-      aimingLine.strokePath();
-    };
-
-    const shootBall = () => {
-      const speed = 500;
-      const velocityX = speed * Math.cos(adjustedAimingAngle());
-      const velocityY = speed * Math.sin(adjustedAimingAngle());
-      ball.setVelocity(velocityX, velocityY);
-      ball.body.setGravityY(500);
-      aimingLine.clear();
-    };
-
-    const aimAdjustIncrement = 0.1;
-
-    const adjustAim = (direction: "LEFT" | "RIGHT") => {
-      if (direction === "LEFT") {
-        aimingAngle += aimAdjustIncrement;
-        // dont let aimer go above parallel
-        if (aimingAngle > 1.4) {
-          aimingAngle = 1.4;
-        }
-      } else {
-        aimingAngle -= aimAdjustIncrement;
-        if (aimingAngle < -1.4) {
-          aimingAngle = -1.4;
-        }
-      }
-
-      updateAim();
-    };
-
-    this.input.keyboard.on("keydown-LEFT", () => adjustAim("LEFT"));
-    this.input.keyboard.on("keydown-RIGHT", () => adjustAim("RIGHT"));
-    this.input.keyboard.on("keydown-SPACE", shootBall);
-
-    updateAim(); // Initial update of aiming line
+    this.physics.add.collider(ball.sprite, pegs, handleBallPegCollision);
   }
 
   update() {
