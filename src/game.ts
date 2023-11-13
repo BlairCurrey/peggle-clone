@@ -1,5 +1,6 @@
 import * as Phaser from "phaser";
 import { Ball } from "./Ball";
+import { Pegs } from "./Pegs";
 import { spriteConfig } from "./spriteConfig";
 
 class Preloader extends Phaser.Scene {
@@ -23,52 +24,32 @@ class Game extends Phaser.Scene {
   }
 
   create() {
-    const makePeg = (
-      pegs: Phaser.Physics.Arcade.Group,
-      x: number,
-      y: number,
-      texture: string
-    ) => {
-      const peg = pegs.create(x, y, texture);
-      // const peg = this.physics.add.sprite(x, y, texture);
-      const pegWidth = 20;
-      peg.setScale(pegWidth / peg.width, pegWidth / peg.height);
-      peg.body.setCircle(pegWidth);
-      peg.setImmovable(true);
-      return peg;
-    };
-    // Make pegs
-    const pegs = this.physics.add.group();
-
-    makePeg(pegs, 300, 300, "peg2");
-    makePeg(pegs, 215, 350, "peg2");
-
-    const ball = new Ball(this);
+    const pegs = new Pegs(this, [
+      { x: 300, y: 300, texture: "peg2" },
+      { x: 340, y: 350, texture: "peg2" },
+      { x: 440, y: 460, texture: "peg2" },
+    ]);
+    const ball = new Ball(this, 0, 0, undefined);
 
     const handleBallPegCollision = (ball, peg) => {
-      // Add a 2-second delay before destroying the peg using setTimeout
+      // TODO: add to score depending on peg type
+      // Add a 2-second delay before destroying the peg
       setTimeout(() => {
         // Create a fade-out animation for the peg
         this.tweens.add({
           targets: peg,
-          alpha: 0, // Make the peg fully transparent
-          duration: 1000, // Duration of the animation in milliseconds
+          alpha: 0, // make peg transparent
+          duration: 1000, // 1 second
           onComplete: () => {
-            // Once the animation is complete, destroy the peg
             peg.destroy();
           },
         });
       }, 2000);
     };
-    this.physics.add.collider(ball.sprite, pegs, handleBallPegCollision);
+    this.physics.add.collider(ball.sprite, pegs.group, handleBallPegCollision);
   }
 
-  update() {
-    // Phaser.Physics.Arcade.collide("ball", "peg2", (ball, peg) => {
-    //   peg.destroy();
-    // }
-    // collide
-  }
+  update() {}
 }
 
 const config: Phaser.Types.Core.GameConfig = {
