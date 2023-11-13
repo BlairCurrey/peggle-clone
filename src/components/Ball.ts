@@ -1,5 +1,5 @@
 import * as Phaser from "phaser";
-import { spriteConfig } from "./spriteConfig";
+import { spriteConfig } from "../spriteConfig";
 
 // TODO: refactor to truly extend Phaser.Physics.Arcade.Sprite instead of having Ball.sprite?
 // Would have to figure out what to do instead of this.sprite = this.scene.physics.add.sprite( ... )
