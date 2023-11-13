@@ -14,7 +14,7 @@ Can test build by running `dist/index.html` on a local server (such as VScode li
   - not sure about game.js.map and game.js (why does it look different than dev/watch output?)
 - [x] ball sprite/logic should be seperated from scene (make own class?)
 - [x] peg sprite/logic should be seperated from scene
-- [ ] new scene dir with Preloader and Game. maybe need to be supported in rollup (may currently only supports output of src/game.ts specifically)
+- [x] new scene dir with Preloader and Game. maybe need to be supported in rollup (may currently only supports output of src/game.ts specifically)
 - [ ] make pegs smaller (but make sure its visible)
 - [ ] fix peg hitbox to match sprite
 - [ ] fix ball hitbox to match sprite (currently square)
