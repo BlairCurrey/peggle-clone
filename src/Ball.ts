@@ -1,8 +1,14 @@
 import * as Phaser from "phaser";
 import { spriteConfig } from "./spriteConfig";
 
-// TODO: refactor to extend Phaser.Physics.Arcade.Sprite instead of having Ball.sprite ?
+// TODO: refactor to truly extend Phaser.Physics.Arcade.Sprite instead of having Ball.sprite?
 // Would have to figure out what to do instead of this.sprite = this.scene.physics.add.sprite( ... )
+// Otherwise, probably shouldnt extend sprite (many constructor args not used for example)
+// To truly extend sprite, maybe extend from Sprite and do:
+//  this.x = this.startPoint.x;
+//  this.y = this.startPoint.y;
+//  this.texture = ???
+//  this.scene.physics.add.existing(this);
 export class Ball {
   width: number = 15;
   aimingAngle = 0;
@@ -25,6 +31,11 @@ export class Ball {
   }
 
   private init() {
+    // TODO: if extending Spirte, do:
+    // this.x = this.startPoint.x;
+    // this.y = this.startPoint.y;
+    // this.texture = ???
+    // this.scene.physics.add.existing(this);
     this.sprite = this.scene.physics.add.sprite(
       this.startPoint.x,
       this.startPoint.y,
@@ -35,10 +46,10 @@ export class Ball {
       this.width / this.sprite.height
     );
     this.sprite.body.setCircle(this.width * 2);
-    this.sprite.setBounce(1).setCollideWorldBounds(true);
+    this.sprite.setBounce(0.85).setCollideWorldBounds(true);
     // TODO: best way to do this?
-    this.sprite.setDamping(true);
-    this.sprite.setDrag(0.99);
+    // this.sprite.setDamping(true);
+    // this.sprite.setDrag(0.99);
 
     // Aim line
     this.aimingLine = this.scene.add.graphics();
