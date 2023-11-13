@@ -29,7 +29,7 @@ class Game extends Phaser.Scene {
       { x: 340, y: 350, texture: "peg2" },
       { x: 440, y: 460, texture: "peg2" },
     ]);
-    const ball = new Ball(this, 0, 0, undefined);
+    const ball = new Ball(this);
 
     const handleBallPegCollision = (ball, peg) => {
       // TODO: add to score depending on peg type
