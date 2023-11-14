@@ -59,13 +59,12 @@ export class Ball {
     this.scene.input.keyboard.on("keydown-RIGHT", () =>
       this.adjustAim("RIGHT")
     );
-    this.scene.input.keyboard.on("keydown-SPACE", this.shoot);
+    this.scene.input.keyboard.on("keydown-SPACE", this.shoot.bind(this));
 
     this.updateAim(); // Initial update of aiming line
   }
 
-  // arrow function ensures "this" refers to Ball object when called by keyboard event without binding
-  private shoot = () => {
+  private shoot () {
     if (this.isActive) return;
 
     this.isActive = true;
