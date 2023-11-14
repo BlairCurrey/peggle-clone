@@ -50,3 +50,8 @@ Can test build by running `dist/index.html` on a local server (such as VScode li
 - [ ] HUD: score, ball count
   - pattern for tracking score: maybe overengineered? https://chat.openai.com/c/8a1fee8b-9164-4650-a726-3ee02c0f63c5
 - [ ] ball should not reset until pegs are done disappearing
+
+## open questions
+
+- [ ] should i use geometry instead of sprites? for pegs. can probably handle polygon collision better (sprites are just circle/square?)
+- [ ] game style. clean, minimalistic, space-ish? black background, cyan pegs (high contrast).
