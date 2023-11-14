@@ -17,8 +17,7 @@ Can test build by running `dist/index.html` on a local server (such as VScode li
 - [x] new scene dir with Preloader and Game. maybe need to be supported in rollup (may currently only supports output of src/game.ts specifically)
 - [ ] make pegs smaller (but make sure its visible)
 - [ ] fix peg hitbox to match sprite
-- [ ] fix ball hitbox to match sprite (currently square)
-- [ ] fix bug where barely hitting edge of peg richochets ball in wrong direction
+- [x] fix ball hitbox to match sprite (currently square)
 - [ ] make Ball extend sprite as show in comments or keep-as-is and remove comments
 
 ## alpha features
@@ -30,12 +29,13 @@ Can test build by running `dist/index.html` on a local server (such as VScode li
 - [x] ball is subject to gravity
 - [x] some arbitrary number of pegs/blocks on screen (some trivial level)
 - [x] ball bounces off pegs/blocks
-- [ ] better physics: ball should lose momentum on peg hit
+- [x] better physics: ball should lose momentum on peg hit
+- [ ] fix bug where barely hitting edge of peg richochets ball in wrong direction
 - [x] ball bounces off walls
 - [x] objects disappear when hit by ball
 - [x] add delay to objects disappearing when hit by ball
-- [ ] ball is destroyed when it hits bottom of screen
-- [ ] when ball is "gone" a new ball loads up top (and cannot shoot before this point)
+- [x] ball is destroyed when it hits bottom of screen
+- [x] when ball is "gone" a new ball loads up top (and cannot shoot before this point)
 - [ ] there is some ball limit (3, 5?) and game over when limit is 0 and turn is over
 - [x] "Preloader" scene to preload all assets, then "Game" scene https://youtu.be/z15L4E7A3wY?si=HRf457MpaxG0EbKl&t=318
 - [ ] free ball bucket - moving "bucket" that should end turn but not decrease ball possession
@@ -48,3 +48,5 @@ Can test build by running `dist/index.html` on a local server (such as VScode li
   - [ ] on shoot
   - [ ] on block hit
 - [ ] HUD: score, ball count
+  - pattern for tracking score: maybe overengineered? https://chat.openai.com/c/8a1fee8b-9164-4650-a726-3ee02c0f63c5
+- [ ] ball should not reset until pegs are done disappearing

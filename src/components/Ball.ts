@@ -13,6 +13,7 @@ export class Ball {
   width: number = 15;
   aimingAngle = 0;
   aimAdjustIncrement = 0.1;
+  isActive = false;
 
   scene: Phaser.Scene;
   startPoint!: Phaser.Geom.Point;
@@ -31,7 +32,7 @@ export class Ball {
   }
 
   private init() {
-    // TODO: if extending Spirte, do:
+    // TODO: if extending Sprite, do:
     // this.x = this.startPoint.x;
     // this.y = this.startPoint.y;
     // this.texture = ???
@@ -63,16 +64,20 @@ export class Ball {
     this.updateAim(); // Initial update of aiming line
   }
 
+  // arrow function ensures "this" refers to Ball object when called by keyboard event without binding
   private shoot = () => {
+    if (this.isActive) return;
+
+    this.isActive = true;
     const speed = 500;
-    const velocityX = speed * Math.cos(this.adjustedAimingAngle());
-    const velocityY = speed * Math.sin(this.adjustedAimingAngle());
+    const velocityX = speed * Math.cos(this.adjustedAimingAngle);
+    const velocityY = speed * Math.sin(this.adjustedAimingAngle);
     this.sprite.setVelocity(velocityX, velocityY);
     this.sprite.body.setGravityY(500);
     this.aimingLine.clear();
   };
 
-  private adjustedAimingAngle() {
+  private get adjustedAimingAngle() {
     return this.aimingAngle + Math.PI / 2;
   }
 
@@ -82,15 +87,15 @@ export class Ball {
     this.aimingLine.beginPath();
     this.aimingLine.moveTo(this.sprite.x, this.sprite.y);
     const lineLength = 50;
-    const x2 =
-      this.sprite.x + lineLength * Math.cos(this.adjustedAimingAngle());
-    const y2 =
-      this.sprite.y + lineLength * Math.sin(this.adjustedAimingAngle());
+    const x2 = this.sprite.x + lineLength * Math.cos(this.adjustedAimingAngle);
+    const y2 = this.sprite.y + lineLength * Math.sin(this.adjustedAimingAngle);
     this.aimingLine.lineTo(x2, y2);
     this.aimingLine.strokePath();
   }
 
   private adjustAim(direction: "LEFT" | "RIGHT") {
+    if (this.isActive) return;
+
     if (direction === "LEFT") {
       this.aimingAngle += this.aimAdjustIncrement;
       // dont let aimer go above parallel
@@ -106,5 +111,19 @@ export class Ball {
     }
 
     this.updateAim();
+  }
+
+  public get isOffScreen(): boolean {
+    return this.sprite.y > this.scene.game.scale.height;
+  }
+
+  public destroy(): void {
+    // unregister keyboard events, else they will still fire after ball is destroyed
+    this.scene.input.keyboard.off("keydown-LEFT", this.updateAim);
+    this.scene.input.keyboard.off("keydown-RIGHT", this.updateAim);
+    this.scene.input.keyboard.off("keydown-SPACE", this.shoot);
+
+    // destroy sprite and remove from scene
+    this.sprite.destroy(true);
   }
 }
