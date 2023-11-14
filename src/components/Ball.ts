@@ -1,5 +1,5 @@
 import * as Phaser from "phaser";
-import { spriteConfig } from "../spriteConfig";
+import { spriteConfig } from "../utils/spriteConfig";
 
 // TODO: refactor to truly extend Phaser.Physics.Arcade.Sprite instead of having Ball.sprite?
 // Would have to figure out what to do instead of this.sprite = this.scene.physics.add.sprite( ... )
@@ -64,7 +64,7 @@ export class Ball {
     this.updateAim(); // Initial update of aiming line
   }
 
-  private shoot () {
+  private shoot() {
     if (this.isActive) return;
 
     this.isActive = true;
@@ -74,7 +74,7 @@ export class Ball {
     this.sprite.setVelocity(velocityX, velocityY);
     this.sprite.body.setGravityY(500);
     this.aimingLine.clear();
-  };
+  }
 
   private get adjustedAimingAngle() {
     return this.aimingAngle + Math.PI / 2;

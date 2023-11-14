@@ -1,5 +1,5 @@
 import * as Phaser from "phaser";
-import { spriteConfig } from "../spriteConfig";
+import { spriteConfig } from "../utils/spriteConfig";
 
 export class Preloader extends Phaser.Scene {
   constructor() {

@@ -36,9 +36,15 @@ Can test build by running `dist/index.html` on a local server (such as VScode li
 - [x] add delay to objects disappearing when hit by ball
 - [x] ball is destroyed when it hits bottom of screen
 - [x] when ball is "gone" a new ball loads up top (and cannot shoot before this point)
-- [ ] there is some ball limit (3, 5?) and game over when limit is 0 and turn is over
+- [x] Track gamestate and display on HUD (score, ball count)
+  - `GameStateManager`. singleton, interface for getting/setting state, emits events on set (maybe)
+- [ ] win when 0 pegs left, else lose when 0 balls left
 - [x] "Preloader" scene to preload all assets, then "Game" scene https://youtu.be/z15L4E7A3wY?si=HRf457MpaxG0EbKl&t=318
 - [ ] free ball bucket - moving "bucket" that should end turn but not decrease ball possession
+- [ ] ball should not reset until pegs are done disappearing
+- [ ] audio
+  - [ ] on shoot
+  - [ ] on block hit
 
 ## beta featrures
 
@@ -47,11 +53,9 @@ Can test build by running `dist/index.html` on a local server (such as VScode li
 - [ ] audio
   - [ ] on shoot
   - [ ] on block hit
-- [ ] HUD: score, ball count
-  - pattern for tracking score: maybe overengineered? https://chat.openai.com/c/8a1fee8b-9164-4650-a726-3ee02c0f63c5
-- [ ] ball should not reset until pegs are done disappearing
 
 ## open questions
 
 - [ ] should i use geometry instead of sprites? for pegs. can probably handle polygon collision better (sprites are just circle/square?)
 - [ ] game style. clean, minimalistic, space-ish? black background, cyan pegs (high contrast).
+- [ ] should i use either phaser StateManager plugin (https://rexrainbow.github.io/phaser3-rex-notes/docs/site/statemanager/) or EventEmitter (https://photonstorm.github.io/phaser3-docs/Phaser.Events.EventEmitter.html)? Event Emitter in particular might be useful (maybe better integration with things happening interanlly in phaser scenes, physics, etc?)

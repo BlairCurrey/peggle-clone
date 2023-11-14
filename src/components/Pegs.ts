@@ -24,6 +24,7 @@ export class Pegs {
       peg.setScale(pegWidth / peg.width, pegWidth / peg.height);
       peg.body.setCircle(pegWidth);
       peg.setImmovable(true);
+      peg.wasHit = false;
     });
   }
 }
