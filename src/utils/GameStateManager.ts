@@ -13,7 +13,6 @@ interface GameState {
 export class GameStateManager extends EventEmitter {
   private static instance?: GameStateManager;
   private state!: GameState;
-  // private eventEmitter!: EventEmitter;
 
   private defaultState: GameState = {
     ballCount: 3,
