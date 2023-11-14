@@ -23,6 +23,7 @@ export class Pegs {
       const pegWidth = 20;
       peg.setScale(pegWidth / peg.width, pegWidth / peg.height);
       peg.body.setCircle(pegWidth);
+      // peg.body.setCircle(pegWidth * 2, 10, 10);
       peg.setImmovable(true);
       peg.wasHit = false;
     });

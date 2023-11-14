@@ -1,27 +1,32 @@
 import * as Phaser from "phaser";
 import { Ball } from "../components/Ball";
 import { Pegs } from "../components/Pegs";
-import { spriteConfig } from "../utils/spriteConfig";
+import { spriteConfig } from "../utils/images";
 import { GameStateManager } from "../utils/GameStateManager";
 import { HUD } from "../components/HUD";
+import { audioConfig } from "../utils/audio";
+import { generateRandomPegs } from "../utils/generateRandomPegs";
 
 export class Game extends Phaser.Scene {
   private ball!: Ball;
   private pegs!: Pegs;
   private gameStateManager!: GameStateManager;
+  private pegHitSound!: Phaser.Sound.BaseSound;
 
   constructor() {
     super("game");
+    this.gameStateManager = new GameStateManager();
   }
 
   create() {
-    this.gameStateManager = new GameStateManager();
+    this.pegHitSound = this.sound.add(audioConfig.blaster3.key);
+
     new HUD(this);
-    this.pegs = new Pegs(this, [
-      { x: 300, y: 300, texture: spriteConfig.peg2.key },
-      { x: 340, y: 350, texture: spriteConfig.peg2.key },
-      { x: 440, y: 460, texture: spriteConfig.peg2.key },
-    ]);
+
+    this.pegs = new Pegs(
+      this,
+      generateRandomPegs(this, 150, spriteConfig.peg2.key)
+    );
     this.spawnBall();
   }
 
@@ -60,8 +65,8 @@ export class Game extends Phaser.Scene {
 
   private addBallPegCollision() {
     const handleBallPegCollision = (ballSprite, pegSprite) => {
+      this.pegHitSound.play({ rate: 5 });
       // TODO: add to score depending on peg type
-      // Add a 2-second delay before destroying the peg
       if (!pegSprite.wasHit) {
         pegSprite.wasHit = true;
         this.gameStateManager.incrementScore(100);

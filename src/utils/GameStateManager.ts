@@ -1,4 +1,4 @@
-// TODO: Phaser has a StateManager and EventEmitter. Consider using those?
+// Can use Phaser.Events.EventEmitter if deeper integration required or my EventEmitter becomes hard to extend.
 
 import { EventEmitter, Event } from "./EventEmitter";
 
@@ -10,10 +10,10 @@ interface GameState {
 /**
  * @classdesc A singleton game state manager
  */
-export class GameStateManager {
+export class GameStateManager extends EventEmitter {
   private static instance?: GameStateManager;
   private state!: GameState;
-  private eventEmitter!: EventEmitter;
+  // private eventEmitter!: EventEmitter;
 
   private defaultState: GameState = {
     ballCount: 3,
@@ -24,16 +24,19 @@ export class GameStateManager {
     if (GameStateManager.instance) {
       return GameStateManager.instance;
     }
-
+    super();
     this.state = this.defaultState;
-    this.eventEmitter = new EventEmitter();
 
     GameStateManager.instance = this;
   }
 
+  getState() {
+    return { ...this.state }; // copy to avoid external modification
+  }
+
   incrementBallCount() {
     this.state.ballCount++;
-    this.eventEmitter.publish(Event.BALL_COUNT_CHANGE, this.state.ballCount);
+    this.publish(Event.BALL_COUNT_CHANGE, this.state.ballCount);
   }
 
   decrementBallCount() {
@@ -41,7 +44,7 @@ export class GameStateManager {
       throw new Error("Ball count cannot be negative");
     }
     this.state.ballCount--;
-    this.eventEmitter.publish(Event.BALL_COUNT_CHANGE, this.state.ballCount);
+    this.publish(Event.BALL_COUNT_CHANGE, this.state.ballCount);
   }
 
   incrementScore(amount: number) {
@@ -50,69 +53,6 @@ export class GameStateManager {
     }
 
     this.state.score += amount;
-    this.eventEmitter.publish(Event.SCORE_CHANGE, this.state.score);
+    this.publish(Event.SCORE_CHANGE, this.state.score);
   }
-
-  // reset() {
-  //   this.state = this.defaultState;
-  //   console.log(this.state);
-  //   // this.eventEmitter.publish("ballsLeftChanged", this.state.ballCount);
-  //   // this.eventEmitter.publish("scoreChanged", this.state.score);
-  // }
-
-  getState() {
-    return { ...this.state }; // Return a copy to avoid external modification
-  }
-
-  subscribe(event: Event, callback: Function) {
-    this.eventEmitter.subscribe(event, callback);
-  }
-
-  publish(event: Event, data: any) {
-    this.eventEmitter.publish(event, data);
-  }
-
-  // unsubscribe(event: Event, callback) {
-  //   this.eventEmitter.unsubscribe(eventName, callback);
-  // }
 }
-
-// export enum Event {
-//   SCORE_CHANGE = "score_change",
-//   BALL_COUNT_CHANGE = "ball_count_change",
-// }
-
-// interface Subscribers {
-//   [eventName: string]: Function[];
-// }
-
-// /**
-//  * @classdesc A singleton event emitter
-//  */
-// class EventEmitter {
-//   private static instance?: EventEmitter;
-//   private subscribers: Subscribers;
-
-//   constructor() {
-//     if (EventEmitter.instance) {
-//       return EventEmitter.instance;
-//     }
-
-//     this.subscribers = {};
-
-//     EventEmitter.instance = this;
-//   }
-
-//   subscribe(eventName: Event, callback: Function) {
-//     if (!this.subscribers[eventName]) {
-//       this.subscribers[eventName] = [];
-//     }
-//     this.subscribers[eventName].push(callback);
-//   }
-
-//   publish(eventName: Event, data: any) {
-//     if (this.subscribers[eventName]) {
-//       this.subscribers[eventName].forEach((callback) => callback(data));
-//     }
-//   }
-// }

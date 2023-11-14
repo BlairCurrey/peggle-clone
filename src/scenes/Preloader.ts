@@ -1,5 +1,6 @@
 import * as Phaser from "phaser";
-import { spriteConfig } from "../utils/spriteConfig";
+import { loadAudio } from "../utils/audio";
+import { loadImages } from "../utils/images";
 
 export class Preloader extends Phaser.Scene {
   constructor() {
@@ -7,8 +8,8 @@ export class Preloader extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image(spriteConfig.ball.key, spriteConfig.ball.path);
-    this.load.image(spriteConfig.peg2.key, spriteConfig.peg2.path);
+    loadImages(this);
+    loadAudio(this);
   }
 
   create() {

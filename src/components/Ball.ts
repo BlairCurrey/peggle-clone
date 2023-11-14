@@ -1,5 +1,6 @@
 import * as Phaser from "phaser";
-import { spriteConfig } from "../utils/spriteConfig";
+import { spriteConfig } from "../utils/images";
+import { audioConfig } from "../utils/audio";
 
 // TODO: refactor to truly extend Phaser.Physics.Arcade.Sprite instead of having Ball.sprite?
 // Would have to figure out what to do instead of this.sprite = this.scene.physics.add.sprite( ... )
@@ -10,18 +11,20 @@ import { spriteConfig } from "../utils/spriteConfig";
 //  this.texture = ???
 //  this.scene.physics.add.existing(this);
 export class Ball {
-  width: number = 15;
-  aimingAngle = 0;
-  aimAdjustIncrement = 0.1;
-  isActive = false;
+  private width: number = 15;
+  private aimingAngle = 0;
+  private aimAdjustIncrement = 0.1;
+  private isActive = false;
 
-  scene: Phaser.Scene;
-  startPoint!: Phaser.Geom.Point;
+  private scene: Phaser.Scene;
+  private startPoint!: Phaser.Geom.Point;
+  private aimingLine!: Phaser.GameObjects.Graphics;
+  private shotSound!: Phaser.Sound.BaseSound;
   sprite!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-  aimingLine!: Phaser.GameObjects.Graphics;
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
+    this.shotSound = this.scene.sound.add(audioConfig.blaster2.key);
     const centerX = this.scene.cameras.main.width / 2;
     this.startPoint = new Phaser.Geom.Point(
       centerX - this.width / 2,
@@ -71,6 +74,7 @@ export class Ball {
     const speed = 500;
     const velocityX = speed * Math.cos(this.adjustedAimingAngle);
     const velocityY = speed * Math.sin(this.adjustedAimingAngle);
+    this.shotSound.play();
     this.sprite.setVelocity(velocityX, velocityY);
     this.sprite.body.setGravityY(500);
     this.aimingLine.clear();

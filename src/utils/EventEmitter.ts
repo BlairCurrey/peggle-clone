@@ -7,21 +7,11 @@ interface Subscribers {
   [eventName: string]: Function[];
 }
 
-/**
- * @classdesc A singleton event emitter
- */
 export class EventEmitter {
-  private static instance?: EventEmitter;
   private subscribers: Subscribers;
 
   constructor() {
-    if (EventEmitter.instance) {
-      return EventEmitter.instance;
-    }
-
     this.subscribers = {};
-
-    EventEmitter.instance = this;
   }
 
   subscribe(eventName: Event, callback: Function) {

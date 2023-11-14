@@ -15,8 +15,9 @@ Can test build by running `dist/index.html` on a local server (such as VScode li
 - [x] ball sprite/logic should be seperated from scene (make own class?)
 - [x] peg sprite/logic should be seperated from scene
 - [x] new scene dir with Preloader and Game. maybe need to be supported in rollup (may currently only supports output of src/game.ts specifically)
-- [ ] make pegs smaller (but make sure its visible)
-- [ ] fix peg hitbox to match sprite
+- [ ] graphics
+  - [ ] make pegs smaller (but make sure its visible)
+  - [ ] fix peg hitbox to match sprite
 - [x] fix ball hitbox to match sprite (currently square)
 - [ ] make Ball extend sprite as show in comments or keep-as-is and remove comments
 
@@ -40,22 +41,18 @@ Can test build by running `dist/index.html` on a local server (such as VScode li
   - `GameStateManager`. singleton, interface for getting/setting state, emits events on set (maybe)
 - [ ] win when 0 pegs left, else lose when 0 balls left
 - [x] "Preloader" scene to preload all assets, then "Game" scene https://youtu.be/z15L4E7A3wY?si=HRf457MpaxG0EbKl&t=318
-- [ ] free ball bucket - moving "bucket" that should end turn but not decrease ball possession
 - [ ] ball should not reset until pegs are done disappearing
-- [ ] audio
-  - [ ] on shoot
-  - [ ] on block hit
+- [x] can gain points by hitting a block
+- [x] audio
+  - [x] on shoot
+  - [x] on block hit
 
 ## beta featrures
 
 - [ ] aimer can also be controlled with mouse and fired with click
-- [ ] can gain points by hitting a block (1 point per block)
-- [ ] audio
-  - [ ] on shoot
-  - [ ] on block hit
+- [ ] free ball bucket - moving "bucket" that should end turn but not decrease ball possession
 
 ## open questions
 
 - [ ] should i use geometry instead of sprites? for pegs. can probably handle polygon collision better (sprites are just circle/square?)
-- [ ] game style. clean, minimalistic, space-ish? black background, cyan pegs (high contrast).
-- [ ] should i use either phaser StateManager plugin (https://rexrainbow.github.io/phaser3-rex-notes/docs/site/statemanager/) or EventEmitter (https://photonstorm.github.io/phaser3-docs/Phaser.Events.EventEmitter.html)? Event Emitter in particular might be useful (maybe better integration with things happening interanlly in phaser scenes, physics, etc?)
+- [ ] game style. clean, minimalistic, space-ish? black background, cyan pegs (high contrast).]
