@@ -1,10 +1,10 @@
 import * as Phaser from "phaser";
 import { Ball } from "../components/Ball";
 import { Pegs } from "../components/Pegs";
-import { spriteConfig } from "../utils/images";
+import { Image } from "../utils/images";
 import { GameStateManager } from "../utils/GameStateManager";
 import { HUD } from "../components/HUD";
-import { audioConfig } from "../utils/audio";
+import { Audio } from "../utils/audio";
 import { generateRandomPegs } from "../utils/generateRandomPegs";
 
 export class Game extends Phaser.Scene {
@@ -19,14 +19,12 @@ export class Game extends Phaser.Scene {
   }
 
   create() {
-    this.pegHitSound = this.sound.add(audioConfig.blaster3.key);
+    this.sound.add(Audio.BACKGROUND1).play({ loop: true });
+    this.pegHitSound = this.sound.add(Audio.BLASTER3);
 
     new HUD(this);
 
-    this.pegs = new Pegs(
-      this,
-      generateRandomPegs(this, 150, spriteConfig.peg2.key)
-    );
+    this.pegs = new Pegs(this, generateRandomPegs(this, 5, Image.ORB));
     this.spawnBall();
   }
 
@@ -43,7 +41,6 @@ export class Game extends Phaser.Scene {
       }
 
       const { ballCount } = this.gameStateManager.getState();
-      console.log(ballCount);
 
       if (!ballCount) {
         // TODO: game over screen
@@ -70,7 +67,6 @@ export class Game extends Phaser.Scene {
       if (!pegSprite.wasHit) {
         pegSprite.wasHit = true;
         this.gameStateManager.incrementScore(100);
-        console.log(this.gameStateManager.getState());
       }
 
       setTimeout(() => {

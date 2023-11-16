@@ -15,7 +15,7 @@ export class GameStateManager extends EventEmitter {
   private state!: GameState;
 
   private defaultState: GameState = {
-    ballCount: 3,
+    ballCount: 8,
     score: 0,
   };
 

@@ -1,16 +1,17 @@
 import * as Phaser from "phaser";
 import * as Scene from "./scenes";
+import { Color } from "./utils/Color";
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
-  backgroundColor: "#000000",
-  width: 800,
-  height: 600,
+  backgroundColor: Color.BLUE_900,
+  width: 1280,
+  height: 800,
   scene: [Scene.Preloader, Scene.Game],
   physics: {
     default: "arcade",
     arcade: {
-      debug: true,
+      // debug: true,
       // alternatively, set in scene create with this.physics.world.setBounds
       checkCollision: {
         up: true,

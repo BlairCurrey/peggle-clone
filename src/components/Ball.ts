@@ -1,19 +1,11 @@
 import * as Phaser from "phaser";
-import { spriteConfig } from "../utils/images";
-import { audioConfig } from "../utils/audio";
+import { Image } from "../utils/images";
+import { Audio } from "../utils/audio";
 
-// TODO: refactor to truly extend Phaser.Physics.Arcade.Sprite instead of having Ball.sprite?
-// Would have to figure out what to do instead of this.sprite = this.scene.physics.add.sprite( ... )
-// Otherwise, probably shouldnt extend sprite (many constructor args not used for example)
-// To truly extend sprite, maybe extend from Sprite and do:
-//  this.x = this.startPoint.x;
-//  this.y = this.startPoint.y;
-//  this.texture = ???
-//  this.scene.physics.add.existing(this);
 export class Ball {
   private width: number = 15;
   private aimingAngle = 0;
-  private aimAdjustIncrement = 0.1;
+  private aimAdjustIncrement = 0.05;
   private isActive = false;
 
   private scene: Phaser.Scene;
@@ -24,7 +16,7 @@ export class Ball {
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
-    this.shotSound = this.scene.sound.add(audioConfig.blaster2.key);
+    this.shotSound = this.scene.sound.add(Audio.BLASTER2);
     const centerX = this.scene.cameras.main.width / 2;
     this.startPoint = new Phaser.Geom.Point(
       centerX - this.width / 2,
@@ -35,15 +27,10 @@ export class Ball {
   }
 
   private init() {
-    // TODO: if extending Sprite, do:
-    // this.x = this.startPoint.x;
-    // this.y = this.startPoint.y;
-    // this.texture = ???
-    // this.scene.physics.add.existing(this);
     this.sprite = this.scene.physics.add.sprite(
       this.startPoint.x,
       this.startPoint.y,
-      spriteConfig.ball.key
+      Image.BALL
     );
     this.sprite.setScale(
       this.width / this.sprite.width,
@@ -51,9 +38,6 @@ export class Ball {
     );
     this.sprite.body.setCircle(this.width * 2);
     this.sprite.setBounce(0.85).setCollideWorldBounds(true);
-    // TODO: best way to do this?
-    // this.sprite.setDamping(true);
-    // this.sprite.setDrag(0.99);
 
     // Aim line
     this.aimingLine = this.scene.add.graphics();
