@@ -1,6 +1,7 @@
 import * as Phaser from "phaser";
 import { PegConfig } from "../components/Pegs";
 import { GameConfig } from "../config/game";
+import { pegTypes } from "../components/Peg/Peg";
 
 export function generateRandomPegs(
   scene: Phaser.Scene,
@@ -14,7 +15,8 @@ export function generateRandomPegs(
       scene.game.scale.width - GameConfig.BORDER_OFFSET_X
     );
     const y = Phaser.Math.Between(0 + 200, scene.game.scale.height - 20);
-    pegs.push({ x, y });
+    const pegType = pegTypes[Phaser.Math.Between(0, pegTypes.length - 1)];
+    pegs.push({ x, y, type: pegType });
   }
 
   return pegs;

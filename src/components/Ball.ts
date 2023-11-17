@@ -1,6 +1,6 @@
 import * as Phaser from "phaser";
-import { Image } from "../config/images";
-import { Audio } from "../config/audio";
+import { ImageKey } from "../config/images";
+import { AudioKey } from "../config/audio";
 import { GameConfig } from "../config/game";
 
 export class Ball {
@@ -17,7 +17,7 @@ export class Ball {
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
-    this.shotSound = this.scene.sound.add(Audio.BLASTER2);
+    this.shotSound = this.scene.sound.add(AudioKey.BLASTER2);
     const centerX = this.scene.cameras.main.width / 2;
     this.startPoint = new Phaser.Geom.Point(
       centerX - this.width / 2,
@@ -31,7 +31,7 @@ export class Ball {
     this.sprite = this.scene.physics.add.sprite(
       this.startPoint.x,
       this.startPoint.y,
-      Image.BALL
+      ImageKey.BALL
     );
     this.sprite.setScale(
       this.width / this.sprite.width,

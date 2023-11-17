@@ -48,7 +48,7 @@ Can test build by running `dist/index.html` on a local server (such as VScode li
 - [x] when ball is "gone" a new ball loads up top (and cannot shoot before this point)
 - [x] Track gamestate and display on HUD (score, ball count)
   - `GameStateManager`. singleton, interface for getting/setting state, emits events on set (maybe)
-- [ ] win when 0 pegs left, else lose when 0 balls left
+- [x] win when 0 pegs left, else lose when 0 balls left
 - [ ] ball should not reset until pegs are done disappearing. currently, on last ball if you get remaining pegs its a loss because peg doesnt disappear until after the win check happens
 - [x] "Preloader" scene to preload all assets, then "Game" scene https://youtu.be/z15L4E7A3wY?si=HRf457MpaxG0EbKl&t=318
 - [x] can gain points by hitting a block
@@ -59,14 +59,17 @@ Can test build by running `dist/index.html` on a local server (such as VScode li
 - [ ] different peg types
   - maybe pass peg into a constructor for new `Peg` class? with type, sprite, point value, etc. referring to peg from `const peg = this.group.create` in `class Pegs`. Currently I'm lacking much of a concept of a "Peg". Currently im just adding something to a group.
   - [x] have different sprites
-  - [ ] have different point values
-  - [ ] win when all of a certain type of peg is gone - loops through each in the game update? or maybe track if target type is 0?
+  - [x] have different point values
+  - [ ] move peg hit sound to peg
+  - [ ] know which peg type on collision and act accordingly (score, sound). use setData/getData for now but ultimately might want to ungroup/set on Peg class.
+  - [ ] win when all of a certain type of peg are gone - loops through each in the game update? or maybe track target type?
 - [ ] aimer is affected by gravity/matches trajectory of ball. (look into Phaser's rope?)
 - [ ] free ball bucket - moving "bucket" that should end turn but not decrease ball possession
 - [x] simple border around screen that contains hud, ball bounces off of. currently the game area is the entire screen.
 - [ ] center game in screen, make background (black?)
 - [x] better ball asset
 - [ ] border from sprite/image
+- [ ] win message on win and restart button/prompt (press space). lose message on lose and same restart action.
 
 ## beta featrures
 

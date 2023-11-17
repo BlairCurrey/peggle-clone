@@ -1,6 +1,6 @@
 import * as Phaser from "phaser";
 import * as Scene from "./scenes";
-import { Color } from "./utils/Color";
+import { Color } from "./config/Color";
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,

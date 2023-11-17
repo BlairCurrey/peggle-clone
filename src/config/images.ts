@@ -1,12 +1,12 @@
 import { Scene } from "phaser";
 
 export function loadImages(scene: Scene) {
-  Object.entries(imagePaths).forEach(([key, path]) => {
+  Object.entries(pathByImageKey).forEach(([key, path]) => {
     scene.load.image(key, path);
   });
 }
 
-export enum Image {
+export enum ImageKey {
   BALL = "ball",
   ORB_BLUE = "orb_blue",
   ORB_PINK = "orb_pink",
@@ -14,17 +14,10 @@ export enum Image {
   ORB_GREEN_2 = "orb_green_2",
 }
 
-export const orbImages = [
-  Image.ORB_BLUE,
-  Image.ORB_PINK,
-  Image.ORB_GREEN_1,
-  Image.ORB_GREEN_2,
-];
-
-const imagePaths: { [key in Image]: string } = {
-  [Image.BALL]: "assets/images/ball.png",
-  [Image.ORB_BLUE]: "assets/images/orb-blue.png",
-  [Image.ORB_PINK]: "assets/images/orb-pink.png",
-  [Image.ORB_GREEN_1]: "assets/images/orb-green1.png",
-  [Image.ORB_GREEN_2]: "assets/images/orb-green2.png",
+const pathByImageKey: { [key in ImageKey]: string } = {
+  [ImageKey.BALL]: "assets/images/ball.png",
+  [ImageKey.ORB_BLUE]: "assets/images/orb-blue.png",
+  [ImageKey.ORB_PINK]: "assets/images/orb-pink.png",
+  [ImageKey.ORB_GREEN_1]: "assets/images/orb-green1.png",
+  [ImageKey.ORB_GREEN_2]: "assets/images/orb-green2.png",
 };
