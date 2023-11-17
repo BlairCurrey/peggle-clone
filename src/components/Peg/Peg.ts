@@ -1,4 +1,4 @@
-// Abstract class example
+import { AudioKey } from "../../config/audio";
 import { GameConfig } from "../../config/game";
 import { ImageKey } from "../../config/images";
 import { v4 as uuidv4 } from "uuid";
@@ -11,19 +11,20 @@ export enum PegType {
 export const pegTypes: PegType[] = Object.values(PegType);
 
 abstract class Peg {
-  abstract basePoints: number;
   abstract type: PegType;
+  // abstract sound: Phaser.Sound.BaseSound;
 
-  // image "getter" allows us to call `this.image` in this abstract class's constructor
-  // and and get the subclasses's this.image. This is in contrast to `abstract image: Image`
+  // these "getters" allow calling `this.imageKey` (and simmilar) in this abstract class's
+  // constructor and getting the subclasses's this.image. This is in contrast to `abstract image: Image`
   // which would always be `undefined` in this abstract class.
   abstract get imageKey(): ImageKey;
+  abstract get basePoints(): number;
 
   wasHit: boolean = false;
   size: number = GameConfig.PEG_SIZE;
+  audioKey: AudioKey = AudioKey.BLASTER3;
 
   id: string;
-  // TODO: Should this be static body?
   phaserImage: Phaser.Types.Physics.Arcade.ImageWithDynamicBody;
 
   constructor(
@@ -32,7 +33,7 @@ abstract class Peg {
     scene: Phaser.Scene,
     group: Phaser.Physics.Arcade.Group
   ) {
-    // this.image will be set by subclasses
+    // abstract this.imageKey will be defined in subclasses
     this.phaserImage = scene.physics.add.image(x, y, this!.imageKey);
     group.add(this.phaserImage);
 
@@ -40,11 +41,20 @@ abstract class Peg {
     this.phaserImage
       .setDisplaySize(this.size, this.size)
       .setCircle(this.phaserImage.width / 2);
-    // TODO: refactor wasHit to use Peg.wasHit
-    this.phaserImage.setImmovable(true).setData("wasHit", false);
+    this.phaserImage
+      .setImmovable(true)
+      .setData("wasHit", this.wasHit)
+      .setData("basePoints", this!.basePoints) // abstract this.basePoints will be defined by subclasses
+      .setData("sound", scene.sound.add(this.audioKey))
+      .setData("pegType", this!.type); // this.type will be defined by subclasses
 
     this.id = uuidv4();
   }
+
+  // TODO:
+  // playSound() {
+  //   this.sound!.play({ rate: 5 });
+  // }
 }
 
 export function createPegByType(
@@ -67,9 +77,12 @@ export function createPegByType(
 }
 
 class CommonPeg extends Peg {
-  type = PegType.COMMON;
-  basePoints = 10;
-
+  get type() {
+    return PegType.COMMON;
+  }
+  get basePoints() {
+    return 10;
+  }
   get imageKey() {
     return ImageKey.ORB_BLUE;
   }
@@ -85,9 +98,12 @@ class CommonPeg extends Peg {
 }
 
 class TargetPeg extends Peg {
-  type = PegType.COMMON;
-  basePoints = 100;
-
+  get type() {
+    return PegType.TARGET;
+  }
+  get basePoints() {
+    return 100;
+  }
   get imageKey() {
     return ImageKey.ORB_GREEN_1;
   }
@@ -103,9 +119,12 @@ class TargetPeg extends Peg {
 }
 
 class BonusPeg extends Peg {
-  type = PegType.COMMON;
-  basePoints = 1000;
-
+  get type() {
+    return PegType.BONUS;
+  }
+  get basePoints() {
+    return 1000;
+  }
   get imageKey() {
     return ImageKey.ORB_PINK;
   }

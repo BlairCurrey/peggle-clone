@@ -45,4 +45,11 @@ export class Pegs {
       );
     });
   }
+
+  getTargetPegCount() {
+    // TODO: optimize this by storing the count and updating it when pegs are destroyed
+    return this.group
+      .getChildren()
+      .filter((child) => child.getData("pegType") === PegType.TARGET).length;
+  }
 }

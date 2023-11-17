@@ -26,8 +26,10 @@ Can test build by running `dist/index.html` on a local server (such as VScode li
 - [ ] dependency injection? basically anywhere i am importing and then running something could have those things passed in. maybe make a super simple container (all singleton?)
 - [x] move image,audio from util to config
 - [ ] deploy to github pages?
-- [ ] make the spawnBall and collision handler part of the Ball class?
 - [ ] make new class for the Ball aimer?
+- [ ] make the spawnBall and collision handler part of the Ball class? Peg? Pegs?
+- [ ] refactor away from setData/getData on Peg class and groups on Pegs class. Should make these properties of the class. Group is used to register the pegs with the handler but I can just as easily register each peg in the Peg constructor.
+  - maye be closely related to the collision refactor. should that be on the Ball? Peg? Pegs? Not sure...
 - [x] update packages
 
 ## alpha features
@@ -49,20 +51,21 @@ Can test build by running `dist/index.html` on a local server (such as VScode li
 - [x] Track gamestate and display on HUD (score, ball count)
   - `GameStateManager`. singleton, interface for getting/setting state, emits events on set (maybe)
 - [x] win when 0 pegs left, else lose when 0 balls left
-- [ ] ball should not reset until pegs are done disappearing. currently, on last ball if you get remaining pegs its a loss because peg doesnt disappear until after the win check happens
+- [ ] fix bug where no win trigger if peg doesnt fade before ball is gone. currently need to reshoot another ball to win (checks for remaining pegs and succeeds)
+  - or, re-examine peggle to see how it handles fade-out (none until ball is gone?)
 - [x] "Preloader" scene to preload all assets, then "Game" scene https://youtu.be/z15L4E7A3wY?si=HRf457MpaxG0EbKl&t=318
 - [x] can gain points by hitting a block
 - [x] audio
   - [x] on shoot
   - [x] on block hit
 - [x] background music
-- [ ] different peg types
+- [x] different peg types
   - maybe pass peg into a constructor for new `Peg` class? with type, sprite, point value, etc. referring to peg from `const peg = this.group.create` in `class Pegs`. Currently I'm lacking much of a concept of a "Peg". Currently im just adding something to a group.
   - [x] have different sprites
   - [x] have different point values
-  - [ ] move peg hit sound to peg
-  - [ ] know which peg type on collision and act accordingly (score, sound). use setData/getData for now but ultimately might want to ungroup/set on Peg class.
-  - [ ] win when all of a certain type of peg are gone - loops through each in the game update? or maybe track target type?
+  - [x] move peg hit sound to peg
+  - [x] know which peg type on collision and act accordingly (score, sound). use setData/getData for now but ultimately might want to ungroup/set on Peg class.
+  - [x] win when all of a certain type of peg are gone - loops through each in the game update? or maybe track target type?
 - [ ] aimer is affected by gravity/matches trajectory of ball. (look into Phaser's rope?)
 - [ ] free ball bucket - moving "bucket" that should end turn but not decrease ball possession
 - [x] simple border around screen that contains hud, ball bounces off of. currently the game area is the entire screen.
@@ -75,13 +78,15 @@ Can test build by running `dist/index.html` on a local server (such as VScode li
 
 - [ ] aimer can also be controlled with mouse and fired with click
 - [ ] slow time if ball is on path for peg (within some small margin of error). `this.physics.world.timeScale = 1.5;` might be hard to do. maybe take the distance and velocity of ball. if distance is closing at the same rate as velocity, slow time. I think this would mean 1: it's getting closer, and 2: it's getting closer at the rate you would expect if it were heading right for it. I guess this would only work for last peg, because last peg of certain type could have something blocking it.
-- [ ] batch points in turn and "flush" to score at end. show score incrementing at end of turn in middle of scren (large) and then increment score in HUD.
+- [ ] batch points in turn and "flush" to score at end. show score incrementing at end of turn in middle of scren (large) and then increment score in HUD. or another interesting animation. Maybe a vertical bar that fills up then empties at end of turn with a soudn effect and a number incrementing about the bar.
 
 ## open questions
 
-- [ ] should i use geometry instead of sprites? for pegs. can probably handle polygon collision better (sprites are just circle/square?). or a mix?
-- [ ] game style. clean, minimalistic, space-ish? black background, cyan pegs (high contrast). or maybe more muted?
-- [ ] orb vs. peg name? peg comes from peggle. orb is spherical and may not work with other shapes ( so maybe just use it to refer to round pegs?)
+- [ ] should i use geometry instead of sprites? for pegs. can probably handle polygon collision better (sprites are just circle/square?). or maybe do a mix?
+- [x] game style. clean, minimalistic, space-ish? black background, cyan pegs (high contrast). or maybe more muted?
+  - have the basic colors. originally inspired from alien but now has more contrast than starting color palette (which was basically all black/blue). emphasis on black/blue with some green and pink for contrast. kinda desaturated.
+- [x] orb vs. peg name? peg comes from peggle. orb is spherical and may not work with other shapes ( so maybe just use it to refer to round pegs?)
+  - use pegs. orb is just a sperical peg and could always be renamed to circle peg, sphere peg, round peg, etc.
 
 # Theme inspo
 

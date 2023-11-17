@@ -11,7 +11,6 @@ export class Game extends Phaser.Scene {
   private ball!: Ball;
   private pegs!: Pegs;
   private gameStateManager!: GameStateManager;
-  private pegHitSound!: Phaser.Sound.BaseSound;
 
   constructor() {
     super("game");
@@ -20,7 +19,6 @@ export class Game extends Phaser.Scene {
 
   create() {
     this.sound.add(AudioKey.BACKGROUND1).play({ loop: true });
-    this.pegHitSound = this.sound.add(AudioKey.BLASTER3);
 
     new HUD(this);
 
@@ -33,8 +31,8 @@ export class Game extends Phaser.Scene {
     if (this.ball.isOffScreen) {
       this.ball.destroy();
 
-      if (!this.pegs.group.getLength()) {
-        // TODO: victory screen
+      if (this.pegs.getTargetPegCount() === 0) {
+        // TODO: victory message, restart prompt
         alert("You won!");
         this.scene.stop();
         // this.scene.start("game");
@@ -44,7 +42,7 @@ export class Game extends Phaser.Scene {
       const { ballCount } = this.gameStateManager.getState();
 
       if (!ballCount) {
-        // TODO: game over screen
+        // TODO: lose message, restart prompt
         alert("Game over!");
         this.scene.stop();
         // this.scene.start("game");
@@ -65,11 +63,11 @@ export class Game extends Phaser.Scene {
 
   private addBallPegCollision(ball: Ball) {
     const handleBallPegCollision = (ballSprite, pegSprite) => {
-      this.pegHitSound.play({ rate: 5 });
-      // TODO: add to score depending on peg type
+      pegSprite.getData("sound").play({ rate: 5 });
       if (!pegSprite.getData("wasHit")) {
         pegSprite.setData("wasHit", true);
-        this.gameStateManager.incrementScore(100);
+        const points = pegSprite.getData("basePoints");
+        this.gameStateManager.incrementScore(points);
       }
 
       setTimeout(() => {
