@@ -1,9 +1,10 @@
 import * as Phaser from "phaser";
-import { Image } from "../utils/images";
-import { Audio } from "../utils/audio";
+import { Image } from "../config/images";
+import { Audio } from "../config/audio";
+import { GameConfig } from "../config/game";
 
 export class Ball {
-  private width: number = 15;
+  private width: number = GameConfig.BALL_WIDTH;
   private aimingAngle = 0;
   private aimAdjustIncrement = 0.05;
   private isActive = false;

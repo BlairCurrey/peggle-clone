@@ -1,6 +1,6 @@
 import * as Phaser from "phaser";
-import { loadAudio } from "../utils/audio";
-import { loadImages } from "../utils/images";
+import { loadAudio } from "../config/audio";
+import { loadImages } from "../config/images";
 
 export class Preloader extends Phaser.Scene {
   constructor() {

@@ -1,11 +1,34 @@
 import * as Phaser from "phaser";
 import { Ball } from "../components/Ball";
 import { Pegs } from "../components/Pegs";
-import { Image } from "../utils/images";
 import { GameStateManager } from "../utils/GameStateManager";
 import { HUD } from "../components/HUD";
-import { Audio } from "../utils/audio";
+import { Audio } from "../config/audio";
 import { generateRandomPegs } from "../utils/generateRandomPegs";
+import { Border } from "../components/Border";
+
+// class Border extends Phaser.GameObjects.Rectangle {
+//   constructor(scene: Phaser.Scene) {
+//     super(
+//       scene,
+//       scene.cameras.main.centerX,
+//       scene.cameras.main.centerY,
+//       scene.cameras.main.width - GameConfig.BORDER_OFFSET_X,
+//       scene.cameras.main.height
+//     );
+//     scene.add.existing(this);
+//     scene.physics.world.enable(this);
+//     this.setStrokeStyle(5, 0x1f4a5f);
+//     this.setVisible(true);
+
+//     this.scene.physics.world.setBounds(
+//       this.x - this.displayWidth / 2 + GameConfig.BALL_WIDTH / 2,
+//       this.y - this.displayHeight / 2 + GameConfig.BALL_WIDTH / 2,
+//       this.displayWidth - GameConfig.BALL_WIDTH,
+//       this.displayHeight - GameConfig.BALL_WIDTH
+//     );
+//   }
+// }
 
 export class Game extends Phaser.Scene {
   private ball!: Ball;
@@ -24,8 +47,9 @@ export class Game extends Phaser.Scene {
 
     new HUD(this);
 
-    this.pegs = new Pegs(this, generateRandomPegs(this, 5, Image.ORB));
-    this.spawnBall();
+    this.pegs = new Pegs(this, generateRandomPegs(this, 5));
+    this.ball = this.spawnBall();
+    new Border(this);
   }
 
   update() {
@@ -50,22 +74,24 @@ export class Game extends Phaser.Scene {
         return;
       }
 
-      this.spawnBall();
+      this.ball = this.spawnBall();
     }
   }
 
+  // TODO: make this part of the ball constructor?
   private spawnBall() {
-    this.ball = new Ball(this);
+    const ball = new Ball(this);
     this.gameStateManager.decrementBallCount();
-    this.addBallPegCollision();
+    this.addBallPegCollision(ball);
+    return ball;
   }
 
-  private addBallPegCollision() {
+  private addBallPegCollision(ball: Ball) {
     const handleBallPegCollision = (ballSprite, pegSprite) => {
       this.pegHitSound.play({ rate: 5 });
       // TODO: add to score depending on peg type
-      if (!pegSprite.wasHit) {
-        pegSprite.wasHit = true;
+      if (!pegSprite.getData("wasHit")) {
+        pegSprite.setData("wasHit", true);
         this.gameStateManager.incrementScore(100);
       }
 
@@ -80,7 +106,7 @@ export class Game extends Phaser.Scene {
     };
 
     this.physics.add.collider(
-      this.ball.sprite,
+      ball.sprite,
       this.pegs.group,
       handleBallPegCollision
     );
