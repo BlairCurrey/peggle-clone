@@ -5,8 +5,8 @@ import { Color } from "./utils/Color";
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   backgroundColor: Color.BLUE_900,
-  width: 400,
-  height: 600,
+  width: 512,
+  height: 640,
   scene: [Scene.Preloader, Scene.Game],
   physics: {
     default: "arcade",

@@ -66,6 +66,7 @@ Can test build by running `dist/index.html` on a local server (such as VScode li
 - [x] simple border around screen that contains hud, ball bounces off of. currently the game area is the entire screen.
 - [ ] center game in screen, make background (black?)
 - [x] better ball asset
+- [ ] border from sprite/image
 
 ## beta featrures
 
