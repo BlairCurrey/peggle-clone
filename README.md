@@ -28,6 +28,7 @@ Can test build by running `dist/index.html` on a local server (such as VScode li
 - [ ] deploy to github pages?
 - [ ] make the spawnBall and collision handler part of the Ball class?
 - [ ] make new class for the Ball aimer?
+- [x] update packages
 
 ## alpha features
 
@@ -64,11 +65,13 @@ Can test build by running `dist/index.html` on a local server (such as VScode li
 - [ ] free ball bucket - moving "bucket" that should end turn but not decrease ball possession
 - [x] simple border around screen that contains hud, ball bounces off of. currently the game area is the entire screen.
 - [ ] center game in screen, make background (black?)
+- [x] better ball asset
 
 ## beta featrures
 
 - [ ] aimer can also be controlled with mouse and fired with click
 - [ ] slow time if ball is on path for peg (within some small margin of error). `this.physics.world.timeScale = 1.5;` might be hard to do. maybe take the distance and velocity of ball. if distance is closing at the same rate as velocity, slow time. I think this would mean 1: it's getting closer, and 2: it's getting closer at the rate you would expect if it were heading right for it. I guess this would only work for last peg, because last peg of certain type could have something blocking it.
+- [ ] batch points in turn and "flush" to score at end. show score incrementing at end of turn in middle of scren (large) and then increment score in HUD.
 
 ## open questions
 

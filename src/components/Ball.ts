@@ -42,6 +42,7 @@ export class Ball {
 
     // Aim line
     this.aimingLine = this.scene.add.graphics();
+    this.aimingLine.setDepth(-1);
     this.aimingLine.lineStyle(2, 0xffffff); // Adjust line style as needed
     this.scene.input.keyboard.on("keydown-LEFT", () => this.adjustAim("LEFT"));
     this.scene.input.keyboard.on("keydown-RIGHT", () =>
@@ -71,7 +72,7 @@ export class Ball {
 
   private updateAim() {
     this.aimingLine.clear();
-    this.aimingLine.lineStyle(2, 0xff0000);
+    this.aimingLine.lineStyle(1, 0xff0000);
     this.aimingLine.beginPath();
     this.aimingLine.moveTo(this.sprite.x, this.sprite.y);
     const lineLength = 50;
