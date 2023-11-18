@@ -28,8 +28,9 @@ Can test build by running `dist/index.html` on a local server (such as VScode li
 - [ ] deploy to github pages?
 - [ ] make new class for the Ball aimer?
 - [ ] make the spawnBall and collision handler part of the Ball class? Peg? Pegs?
-- [ ] refactor away from setData/getData on Peg class and groups on Pegs class. Should make these properties of the class. Group is used to register the pegs with the handler but I can just as easily register each peg in the Peg constructor.
-  - maye be closely related to the collision refactor. should that be on the Ball? Peg? Pegs? Not sure...
+- [ ] refactor away from setData/getData on Peg class and groups on Pegs class. Should make these properties of the class. Group is used to register the pegs with the collision handler but I can just as easily register each peg in the Peg constructor.
+  - may be closely related to the collision refactor. should that be on the Ball? Peg? Pegs? Not sure...
+  - [ ] use or remove uuid package (installed in anticipcation of this but not used yet)
 - [x] update packages
 
 ## alpha features
@@ -73,16 +74,24 @@ Can test build by running `dist/index.html` on a local server (such as VScode li
 - [x] better ball asset
 - [ ] border from sprite/image
 - [ ] win message on win and restart button/prompt (press space). lose message on lose and same restart action.
+- [ ] "real" levels.
+  - [ ] on game start, place all pegs for the level (static positions, not random). from something that can be represented as json (could just be list of {x, y}). then randomly change some (5?) to target pegs. Or dont change them, but init as correct type initially. But the level should have pegs in the same position each time and not determine which position is which type until the level is generated. see https://peggle.fandom.com/wiki/Insane_Aquarium?file=Insaneaquarium.png
+  - [ ] on each new turn, set a `CommonPeg` to `BonusPeg`
+- [ ] "Special" pegs
+  - [ ] New `SpecialPeg` class with new sprite. maybe 10 points, like CommonPeg?
+  - [ ] just one type for now. "blast"? (hits pegs within a certain radius of itself) multi-ball (shoots a new ball out?)
 
 ## beta featrures
 
 - [ ] aimer can also be controlled with mouse and fired with click
 - [ ] slow time if ball is on path for peg (within some small margin of error). `this.physics.world.timeScale = 1.5;` might be hard to do. maybe take the distance and velocity of ball. if distance is closing at the same rate as velocity, slow time. I think this would mean 1: it's getting closer, and 2: it's getting closer at the rate you would expect if it were heading right for it. I guess this would only work for last peg, because last peg of certain type could have something blocking it.
 - [ ] batch points in turn and "flush" to score at end. show score incrementing at end of turn in middle of scren (large) and then increment score in HUD. or another interesting animation. Maybe a vertical bar that fills up then empties at end of turn with a soudn effect and a number incrementing about the bar.
+- [ ] show lives as ball
 
 ## open questions
 
 - [ ] should i use geometry instead of sprites? for pegs. can probably handle polygon collision better (sprites are just circle/square?). or maybe do a mix?
+  - build sprite from graphics? https://phaser.discourse.group/t/building-sprites-with-graphics/4936
 - [x] game style. clean, minimalistic, space-ish? black background, cyan pegs (high contrast). or maybe more muted?
   - have the basic colors. originally inspired from alien but now has more contrast than starting color palette (which was basically all black/blue). emphasis on black/blue with some green and pink for contrast. kinda desaturated.
 - [x] orb vs. peg name? peg comes from peggle. orb is spherical and may not work with other shapes ( so maybe just use it to refer to round pegs?)
@@ -95,3 +104,79 @@ Alien movie - dark, space, grim, bleak.
 - palette: https://coolors.co/1d1e1e-1b2f37-68bae8-1e1a1b-1a3342
 - from: https://filmfreedonia.files.wordpress.com/2015/04/alien06.jpg?w=1024
   planets for pegs? maybe not these (not dark/grim) but just as an idea: https://www.shutterstock.com/image-vector/alien-space-planets-cartoon-fantastic-260nw-2195689619.jpg
+
+# Peggle Game Mechanics
+
+https://peggle.fandom.com/wiki/Game_Mechanics
+
+comment on score multiplier with fewer orange pegs: https://peggle.fandom.com/wiki/Game_Mechanics?commentId=4400000000000004454
+
+```text
+I can't edit this page, so I figured I would share my discoveries here. Most players know that the fever meter goes up when the number of orange pegs decreases, but fewer people know the math behind it.
+
+2x: 15 orange pegs remaining
+
+3x: 10 orange pegs remaining
+
+5x: 6 orange pegs remaining
+
+10x: 3 orange pegs remaining
+
+My theory is that 3, 6, 10, 15 were chosen because they are the triangular numbers (1+2+3+4+...) between 2 and 20.
+
+1+2 = 3
+
+1+2+3 = 6
+
+1+2+3+4 = 10
+
+1+2+3+4+5 = 15
+
+Also, on the "Lots of Orange Pegs" challenges, the Fever Meter will be frozen until there are 25 orange pegs remaining.
+```
+
+# Build Sprite from graphics
+
+https://phaser.discourse.group/t/building-sprites-with-graphics/4936
+
+```ts
+class RoundedRectangleSprite extends Phaser.GameObjects.Sprite {
+  scene: Phaser.Scene;
+  rectangleGraphics: RoundedRectangle;
+  constructor(scene, x, y, width, height) {
+    super(scene, x, y, "");
+    scene.add.existing(this);
+    this.rectangleGraphics = new RoundedRectangle(scene, { width, height });
+    this.setTexture("roundedRect");
+    //this.setPosition(x, y); doesn't work!
+  }
+}
+
+class RoundedRectangle extends Phaser.GameObjects.Graphics {
+  scene: Phaser.Scene;
+  shapeGraphic: Phaser.GameObjects.Graphics;
+  strokeGraphic: Phaser.GameObjects.Graphics;
+  constructor(scene, rectObj: any, radius?: number) {
+    super(scene);
+    this.scene.add.existing(this);
+    this.lineStyle(10, 0x000000);
+    this.fillStyle(0xadd8e6);
+    this.shapeGraphic = this.fillRoundedRect(
+      0,
+      0,
+      rectObj.width,
+      rectObj.height,
+      20
+    );
+    this.strokeGraphic = this.strokeRoundedRect(
+      0,
+      0,
+      rectObj.width,
+      rectObj.height,
+      20
+    );
+    this.generateTexture("roundedRect");
+    this.destroy();
+  }
+}
+```
