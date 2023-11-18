@@ -6,6 +6,7 @@ import { HUD } from "../components/HUD";
 import { AudioKey } from "../config/audio";
 import { generateRandomPegs } from "../utils/generateRandomPegs";
 import { Border } from "../components/Border";
+import { AnyPeg } from "../components/Peg";
 
 export class Game extends Phaser.Scene {
   private ball!: Ball;
@@ -62,20 +63,19 @@ export class Game extends Phaser.Scene {
   }
 
   private addBallPegCollision(ball: Ball) {
-    const handleBallPegCollision = (ballSprite, pegSprite) => {
-      pegSprite.getData("sound").play({ rate: 5 });
-      if (!pegSprite.getData("wasHit")) {
-        pegSprite.setData("wasHit", true);
-        const points = pegSprite.getData("basePoints");
-        this.gameStateManager.incrementScore(points);
+    const handleBallPegCollision = (ball: Ball["sprite"], peg: AnyPeg) => {
+      peg.playSound();
+      if (!peg.wasHit) {
+        peg.wasHit = true;
+        this.gameStateManager.incrementScore(peg.basePoints);
       }
 
       setTimeout(() => {
         this.tweens.add({
-          targets: pegSprite,
+          targets: peg,
           alpha: 0, // make peg transparent
           duration: 1000, // 1 second
-          onComplete: () => pegSprite.destroy(),
+          onComplete: () => peg.destroy(),
         });
       }, 2000);
     };

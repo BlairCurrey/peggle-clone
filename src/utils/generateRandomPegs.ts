@@ -1,7 +1,7 @@
 import * as Phaser from "phaser";
 import { PegConfig } from "../components/Pegs";
 import { GameConfig } from "../config/game";
-import { pegTypes } from "../components/Peg/Peg";
+import { pegTypes } from "../components/Peg";
 
 export function generateRandomPegs(
   scene: Phaser.Scene,

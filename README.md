@@ -28,10 +28,11 @@ Can test build by running `dist/index.html` on a local server (such as VScode li
 - [ ] deploy to github pages?
 - [ ] make new class for the Ball aimer?
 - [ ] make the spawnBall and collision handler part of the Ball class? Peg? Pegs?
-- [ ] refactor away from setData/getData on Peg class and groups on Pegs class. Should make these properties of the class. Group is used to register the pegs with the collision handler but I can just as easily register each peg in the Peg constructor.
+- [x] refactor away from setData/getData on Peg class and groups on Pegs class. Should make these properties of the class. Group is used to register the pegs with the collision handler but I can just as easily register each peg in the Peg constructor.
   - may be closely related to the collision refactor. should that be on the Ball? Peg? Pegs? Not sure...
-  - [ ] use or remove uuid package (installed in anticipcation of this but not used yet)
+  - [x] use or remove uuid package (installed in anticipcation of this but not used yet)
 - [x] update packages
+- [ ] remove group from peg constructor and add in Pegs? Not sure if that will cause any display issues (as i recall, order in peg constructor was important)
 
 ## alpha features
 
