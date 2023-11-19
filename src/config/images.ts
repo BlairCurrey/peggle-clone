@@ -12,6 +12,8 @@ export enum ImageKey {
   ORB_PINK = "orb_pink",
   ORB_GREEN_1 = "orb_green_1",
   ORB_GREEN_2 = "orb_green_2",
+  BORDER_LEFT = "border-left",
+  BORDER_RIGHT = "border-right",
 }
 
 const pathByImageKey: { [key in ImageKey]: string } = {
@@ -20,4 +22,6 @@ const pathByImageKey: { [key in ImageKey]: string } = {
   [ImageKey.ORB_PINK]: "assets/images/orb-pink.png",
   [ImageKey.ORB_GREEN_1]: "assets/images/orb-green1.png",
   [ImageKey.ORB_GREEN_2]: "assets/images/orb-green2.png",
+  [ImageKey.BORDER_LEFT]: "assets/images/border-left2.png",
+  [ImageKey.BORDER_RIGHT]: "assets/images/border-right2.png",
 };

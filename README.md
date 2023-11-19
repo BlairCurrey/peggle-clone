@@ -28,6 +28,38 @@ Can test build by running `dist/index.html` on a local server (such as VScode li
 - [ ] deploy to github pages?
 - [ ] make new class for the Ball aimer?
 - [ ] make the spawnBall and collision handler part of the Ball class? Peg? Pegs?
+
+  - ball:
+
+    - pass pegs into ball and use pegs.group to register collision handler in constructor.
+      - this is an advantage because peg/ball collision is registered on each new ball. If collision handler is on pegs, we need to more manually re-register when we create a new ball.
+    - collision handler will be the same for all pegs (bonus, special, target, etc). so peg will need some generic methods that get implemented on all.
+
+      - what to do if a certain peg type has a one-off behavior? maybe just add a method to the peg class that gets called in the collision handler? so we have `Ball.addBallPegCollision` but `Peg.handleBallPegCollision`? is that meaningfully different than adding the handler in pegs?
+
+        - maybe we get the advantage of registering on ball create, but keep behavior specific to pegs? that seems good...
+        - abstract Peg class can do generic things and subclasses can do more specific things. for example
+
+        ```ts
+        // in abstract class Peg
+        handleBallPegCollision(ball: Ball) {
+          this.playHitSound();
+          this.fadeOut();
+          this.addPointsToScore();
+        }
+
+        // in abstract class SpecialPeg
+        handleBallPegCollision(ball: Ball) {
+          this.playHitSound();
+          this.fadeOut();
+          this.addPointsToScore();
+          this.explodeNearbyPegs();
+        }
+        ```
+
+  - pegs:
+    - pass the pegs into ball
+
 - [x] refactor away from setData/getData on Peg class and groups on Pegs class. Should make these properties of the class. Group is used to register the pegs with the collision handler but I can just as easily register each peg in the Peg constructor.
   - may be closely related to the collision refactor. should that be on the Ball? Peg? Pegs? Not sure...
   - [x] use or remove uuid package (installed in anticipcation of this but not used yet)
@@ -73,7 +105,7 @@ Can test build by running `dist/index.html` on a local server (such as VScode li
 - [x] simple border around screen that contains hud, ball bounces off of. currently the game area is the entire screen.
 - [ ] center game in screen, make background (black?)
 - [x] better ball asset
-- [ ] border from sprite/image
+- [x] border from sprite/image
 - [ ] win message on win and restart button/prompt (press space). lose message on lose and same restart action.
 - [ ] "real" levels.
   - [ ] on game start, place all pegs for the level (static positions, not random). from something that can be represented as json (could just be list of {x, y}). then randomly change some (5?) to target pegs. Or dont change them, but init as correct type initially. But the level should have pegs in the same position each time and not determine which position is which type until the level is generated. see https://peggle.fandom.com/wiki/Insane_Aquarium?file=Insaneaquarium.png
@@ -81,6 +113,10 @@ Can test build by running `dist/index.html` on a local server (such as VScode li
 - [ ] "Special" pegs
   - [ ] New `SpecialPeg` class with new sprite. maybe 10 points, like CommonPeg?
   - [ ] just one type for now. "blast"? (hits pegs within a certain radius of itself) multi-ball (shoots a new ball out?)
+- [ ] update HUD
+  - [ ] pick more interesting font
+  - [ ] simple ball counter on left (BALLS, newline, the count)
+  - [ ] score on right (SCORE, newline, the score)
 
 ## beta featrures
 
@@ -91,12 +127,14 @@ Can test build by running `dist/index.html` on a local server (such as VScode li
 
 ## open questions
 
+- [ ] use assets/images/border-right1 or 2?
 - [ ] should i use geometry instead of sprites? for pegs. can probably handle polygon collision better (sprites are just circle/square?). or maybe do a mix?
   - build sprite from graphics? https://phaser.discourse.group/t/building-sprites-with-graphics/4936
 - [x] game style. clean, minimalistic, space-ish? black background, cyan pegs (high contrast). or maybe more muted?
   - have the basic colors. originally inspired from alien but now has more contrast than starting color palette (which was basically all black/blue). emphasis on black/blue with some green and pink for contrast. kinda desaturated.
 - [x] orb vs. peg name? peg comes from peggle. orb is spherical and may not work with other shapes ( so maybe just use it to refer to round pegs?)
   - use pegs. orb is just a sperical peg and could always be renamed to circle peg, sphere peg, round peg, etc.
+- [ ] if adding more stuff to side borders, how to handle with sprites? currently its 1 64px sprite with a border on the inside edge. so either everything needs to fit on the outside/middle of the spire or need to add new sprite. but if adding a new sprite, its all going to be on the edge with lots of empty space towards inside. If adding more stuff, maybe make new border sprite that is the entire width (and height? so like 128px width by 768 h?)
 
 # Theme inspo
 

@@ -1,25 +1,34 @@
 import * as Phaser from "phaser";
 import { GameConfig } from "../config/game";
+import { ImageKey } from "../config/images";
 
-export class Border extends Phaser.GameObjects.Rectangle {
+export class Border {
+  private leftImage!: Phaser.GameObjects.Image;
+  private rightImage!: Phaser.GameObjects.Image;
+
   constructor(scene: Phaser.Scene) {
-    super(
-      scene,
-      scene.cameras.main.centerX,
+    this.leftImage = scene.add.image(
+      GameConfig.BORDER_OFFSET_X / 2,
       scene.cameras.main.centerY,
-      scene.cameras.main.width - GameConfig.BORDER_OFFSET_X,
-      scene.cameras.main.height
+      ImageKey.BORDER_LEFT
     );
-    scene.add.existing(this);
-    scene.physics.world.enable(this);
-    this.setStrokeStyle(5, 0x1f4a5f);
-    this.setVisible(true);
+    this.rightImage = scene.add.image(
+      scene.cameras.main.width - GameConfig.BORDER_OFFSET_X / 2,
+      scene.cameras.main.centerY,
+      ImageKey.BORDER_RIGHT
+    );
 
-    this.scene.physics.world.setBounds(
-      this.x - this.displayWidth / 2 + GameConfig.BALL_WIDTH / 2,
-      this.y - this.displayHeight / 2 + GameConfig.BALL_WIDTH / 2,
-      this.displayWidth - GameConfig.BALL_WIDTH,
-      this.displayHeight - GameConfig.BALL_WIDTH
+    // Set display size for the sprites
+    const borderHeight = scene.cameras.main.height;
+    this.leftImage.setDisplaySize(GameConfig.BORDER_OFFSET_X, borderHeight);
+    this.rightImage.setDisplaySize(GameConfig.BORDER_OFFSET_X, borderHeight);
+
+    // alternatively, could setup physics on border sprites but this proved simpler
+    scene.physics.world.setBounds(
+      GameConfig.BORDER_OFFSET_X,
+      0,
+      scene.cameras.main.width - GameConfig.BORDER_OFFSET_X * 2,
+      scene.cameras.main.height
     );
   }
 }
