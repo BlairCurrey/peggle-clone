@@ -98,7 +98,7 @@ class TargetPeg extends Peg {
     return 100;
   }
   get imageKey() {
-    return ImageKey.ORB_GREEN_1;
+    return ImageKey.ORB_GREEN_2;
   }
 
   constructor(
