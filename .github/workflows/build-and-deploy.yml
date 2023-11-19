@@ -14,13 +14,11 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
-      - uses: pnpm/action-setup@v2
-        with:
-          version: latest
       - name: Install and Build 🔧
         run: |
           pnpm i
           pnpm build
+
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
