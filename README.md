@@ -2,7 +2,7 @@
 
 bootstrapped with [phaser3-typescript-project-template](https://github.com/photonstorm/phaser3-typescript-project-template)
 
-Can test build by running `dist/index.html` on a local server (such as VScode live server)
+Can test npm `build` command by running `dist/index.html` on a local server (such as VScode live server)
 
 # TODO
 
@@ -176,6 +176,8 @@ Also, on the "Lots of Orange Pegs" challenges, the Fever Meter will be frozen un
 ```
 
 # Build Sprite from graphics
+
+may be useful for non-round pegs that I want to use a sprite for.
 
 https://phaser.discourse.group/t/building-sprites-with-graphics/4936
 
