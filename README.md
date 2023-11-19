@@ -65,6 +65,7 @@ Can test npm `build` command by running `dist/index.html` on a local server (suc
   - [x] use or remove uuid package (installed in anticipcation of this but not used yet)
 - [x] update packages
 - [ ] remove group from peg constructor and add in Pegs? Not sure if that will cause any display issues (as i recall, order in peg constructor was important)
+- [ ] use npm? not really making use of pnpm and im using npm in gh action (feels weird to use different ones. probably fine for just running build command but still feels bad)
 
 ## alpha features
 
@@ -222,3 +223,11 @@ class RoundedRectangle extends Phaser.GameObjects.Graphics {
   }
 }
 ```
+
+# Deployment to Github Pages
+
+Uses a gh action instead of repo configuration because I didn't want to actually commit the built files and have the `index.html` in root. I could commit `/dist` and point to it using git subtrees as detail here https://gist.github.com/cobyism/4730490 but I preferred not to commit `/dist` at all, so I chose the action route.
+
+These options and more detailed in this stack overflow post: https://stackoverflow.com/a/75662195/12893676
+
+Gh action utilizes this action: https://github.com/marketplace/actions/deploy-to-github-pages
