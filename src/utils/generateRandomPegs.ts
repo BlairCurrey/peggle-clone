@@ -11,10 +11,13 @@ export function generateRandomPegs(
 
   for (let i = 0; i < count; i++) {
     const x = Phaser.Math.Between(
-      0 + 100,
+      GameConfig.BORDER_OFFSET_X + GameConfig.PEG_SIZE,
       scene.game.scale.width - GameConfig.BORDER_OFFSET_X
     );
-    const y = Phaser.Math.Between(0 + 200, scene.game.scale.height - 20);
+    const y = Phaser.Math.Between(
+      0 + 200,
+      scene.game.scale.height - GameConfig.PEG_SIZE
+    );
     const pegType = pegTypes[Phaser.Math.Between(0, pegTypes.length - 1)];
     pegs.push({ x, y, type: pegType });
   }
