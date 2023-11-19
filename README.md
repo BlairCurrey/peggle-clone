@@ -113,10 +113,11 @@ Can test build by running `dist/index.html` on a local server (such as VScode li
 - [ ] "Special" pegs
   - [ ] New `SpecialPeg` class with new sprite. maybe 10 points, like CommonPeg?
   - [ ] just one type for now. "blast"? (hits pegs within a certain radius of itself) multi-ball (shoots a new ball out?)
-- [ ] update HUD
-  - [ ] pick more interesting font
-  - [ ] simple ball counter on left (BALLS, newline, the count)
-  - [ ] score on right (SCORE, newline, the score)
+- [x] update HUD
+  - [x] pick more interesting (maybe this? https://www.dafont.com/silkscreen.font).
+    - monospace for now
+  - [x] simple ball counter on left (BALLS, newline, the count)
+  - [x] score on right (SCORE, newline, the score)
 
 ## beta featrures
 

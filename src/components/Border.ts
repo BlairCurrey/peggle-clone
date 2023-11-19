@@ -18,7 +18,7 @@ export class Border {
       scene.cameras.main.centerY,
       ImageKey.BORDER_RIGHT
     );
-    this.leftImage.setDepth(-1);
+    this.rightImage.setDepth(-1);
 
     // Set display size for the sprites
     const borderHeight = scene.cameras.main.height;
