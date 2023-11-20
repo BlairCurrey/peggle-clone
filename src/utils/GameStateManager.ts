@@ -15,7 +15,7 @@ export class GameStateManager extends EventEmitter {
   private state!: GameState;
 
   private defaultState: GameState = {
-    ballCount: 8,
+    ballCount: 3,
     score: 0,
   };
 
@@ -53,5 +53,11 @@ export class GameStateManager extends EventEmitter {
 
     this.state.score += amount;
     this.publish(Event.SCORE_CHANGE, this.state.score);
+  }
+
+  reset() {
+    this.removeAllListeners();
+    this.state = this.defaultState;
+    GameStateManager.instance = undefined;
   }
 }

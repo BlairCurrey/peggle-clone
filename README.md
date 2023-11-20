@@ -107,7 +107,7 @@ Can test npm `build` command by running `dist/index.html` on a local server (suc
 - [ ] center game in screen, make background (black?)
 - [x] better ball asset
 - [x] border from sprite/image
-- [ ] win message on win and restart button/prompt (press space). lose message on lose and same restart action.
+- [x] win message on win and restart button/prompt (press space). lose message on lose and same restart action.
 - [ ] "real" levels.
   - [ ] on game start, place all pegs for the level (static positions, not random). from something that can be represented as json (could just be list of {x, y}). then randomly change some (5?) to target pegs. Or dont change them, but init as correct type initially. But the level should have pegs in the same position each time and not determine which position is which type until the level is generated. see https://peggle.fandom.com/wiki/Insane_Aquarium?file=Insaneaquarium.png
   - [ ] on each new turn, set a `CommonPeg` to `BonusPeg`

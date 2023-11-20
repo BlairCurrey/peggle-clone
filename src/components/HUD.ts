@@ -80,4 +80,21 @@ export class HUD {
     );
     this.scoreText.setOrigin(0.5, 0);
   }
+
+  flashMessage(message: string) {
+    const centerX = this.scene.cameras.main.centerX;
+    const centerY = this.scene.cameras.main.centerY;
+
+    const msg = this.createText(centerX, centerY, message, 32);
+    msg.setAlpha(0);
+    msg.setOrigin(0.5);
+
+    this.scene.tweens.add({
+      targets: msg,
+      alpha: { from: 0, to: 1 },
+      ease: "Linear",
+      duration: 1000,
+      repeat: 0,
+    });
+  }
 }

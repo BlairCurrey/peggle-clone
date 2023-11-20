@@ -11,42 +11,50 @@ import { AnyPeg } from "../components/Peg";
 export class Game extends Phaser.Scene {
   private ball!: Ball;
   private pegs!: Pegs;
-  private gameStateManager!: GameStateManager;
+  private gameStateManager: GameStateManager;
+  private hud!: HUD;
+  private backgroundMusic!: Phaser.Sound.BaseSound;
+  private isGameOver = false;
 
   constructor() {
     super("game");
-    this.gameStateManager = new GameStateManager();
   }
 
   create() {
-    this.sound.add(AudioKey.BACKGROUND1).play({ loop: true });
-
-    new HUD(this);
-
+    this.isGameOver = false;
+    this.gameStateManager = new GameStateManager();
+    this.backgroundMusic = this.sound.add(AudioKey.BACKGROUND1);
+    this.backgroundMusic.play({ loop: true });
+    this.hud = new HUD(this);
     this.pegs = new Pegs(this, generateRandomPegs(this, 5));
     this.ball = this.spawnBall();
     new Border(this);
   }
 
   update() {
+    if (this.isGameOver) return;
+
     if (this.ball.isOffScreen) {
       this.ball.destroy();
 
       if (this.pegs.getTargetPegCount() === 0) {
-        // TODO: victory message, restart prompt
-        alert("You won!");
-        this.scene.stop();
-        // this.scene.start("game");
+        this.isGameOver = true;
+        this.hud.flashMessage("You won! Enter to restart.");
+        // TODO: should I register all listeners in Game scene then do different things based on the state of the game? for example:
+        // spacebarHandler () {
+        //   if (this.gameStateManager.getState().ballCount) ball.shoot();
+        //   else restartScene();
+        // }
+        this.input.keyboard.once("keydown-ENTER", this.restartScene.bind(this));
         return;
       }
 
       const { ballCount } = this.gameStateManager.getState();
 
       if (!ballCount) {
-        // TODO: lose message, restart prompt
-        alert("Game over!");
-        this.scene.stop();
-        // this.scene.start("game");
+        this.isGameOver = true;
+        this.hud.flashMessage("Game over. Enter to restart.");
+        this.input.keyboard.once("keydown-ENTER", this.restartScene.bind(this));
         return;
       }
 
@@ -85,5 +93,12 @@ export class Game extends Phaser.Scene {
       this.pegs.group,
       handleBallPegCollision
     );
+  }
+
+  restartScene() {
+    this.gameStateManager.reset();
+    this.gameStateManager = undefined;
+    this.backgroundMusic.stop();
+    this.scene.restart();
   }
 }

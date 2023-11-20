@@ -26,4 +26,12 @@ export class EventEmitter {
       this.subscribers[eventName].forEach((callback) => callback(data));
     }
   }
+
+  removeAllListeners(eventName?: Event) {
+    if (eventName) {
+      delete this.subscribers[eventName];
+    } else {
+      this.subscribers = {};
+    }
+  }
 }
