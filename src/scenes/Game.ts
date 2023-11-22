@@ -35,7 +35,7 @@ export class Game extends Phaser.Scene {
     if (this.isGameOver) return;
 
     if (this.ball.isOffScreen) {
-      this.ball.destroy();
+      this.endTurn();
 
       if (this.pegs.getTargetPegCount() === 0) {
         this.isGameOver = true;
@@ -70,6 +70,11 @@ export class Game extends Phaser.Scene {
     return ball;
   }
 
+  private endTurn() {
+    this.ball.destroy();
+    this.pegs.destroy();
+  }
+
   private addBallPegCollision(ball: Ball) {
     const handleBallPegCollision = (ball: Ball["sprite"], peg: AnyPeg) => {
       peg.playSound();
@@ -78,14 +83,8 @@ export class Game extends Phaser.Scene {
         this.gameStateManager.incrementScore(peg.basePoints);
       }
 
-      setTimeout(() => {
-        this.tweens.add({
-          targets: peg,
-          alpha: 0, // make peg transparent
-          duration: 1000, // 1 second
-          onComplete: () => peg.destroy(),
-        });
-      }, 2000);
+      peg.setAlpha(0.3);
+      this.pegs.queuePegForDestruction(peg);
     };
 
     this.physics.add.collider(

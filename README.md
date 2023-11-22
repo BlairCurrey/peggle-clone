@@ -66,6 +66,10 @@ Can test npm `build` command by running `dist/index.html` on a local server (suc
 - [x] update packages
 - [ ] remove group from peg constructor and add in Pegs? Not sure if that will cause any display issues (as i recall, order in peg constructor was important)
 - [ ] use npm? not really making use of pnpm and im using npm in gh action (feels weird to use different ones. probably fine for just running build command but still feels bad)
+- [ ] add id to peg and change `pegsToDestroy` to `pegIdsToDestroy`. then make map of id: peg in Pegs class. then use these in the `Pegs.destroy`
+  - alternatively, could name the phaser group objects and do `this.group.children.getByName('string-name');` as shown here: https://phaser.discourse.group/t/get-a-gameobject-by-its-id/1378
+  - or if I have the indexes (probably matches create order?) `this.group.getChildren([0])`: https://stackoverflow.com/questions/56082396/how-to-get-a-single-member-from-a-group-in-phaser-3
+    - I think I like this less than the id. its basically an id "local" to the group. IE, different groups would also have a 0 index which means the index alone isnt enough to find the specific peg. Also, in the collision handler callback, I dont think I will have the id which makes this moot.
 
 ## alpha features
 
@@ -86,7 +90,7 @@ Can test npm `build` command by running `dist/index.html` on a local server (suc
 - [x] Track gamestate and display on HUD (score, ball count)
   - `GameStateManager`. singleton, interface for getting/setting state, emits events on set (maybe)
 - [x] win when 0 pegs left, else lose when 0 balls left
-- [ ] fix bug where no win trigger if peg doesnt fade before ball is gone. currently need to reshoot another ball to win (checks for remaining pegs and succeeds)
+- [x] fix bug where no win trigger if peg doesnt fade before ball is gone. currently need to reshoot another ball to win (checks for remaining pegs and succeeds)
   - or, re-examine peggle to see how it handles fade-out (none until ball is gone?)
 - [x] "Preloader" scene to preload all assets, then "Game" scene https://youtu.be/z15L4E7A3wY?si=HRf457MpaxG0EbKl&t=318
 - [x] can gain points by hitting a block
@@ -119,6 +123,7 @@ Can test npm `build` command by running `dist/index.html` on a local server (suc
     - monospace for now
   - [x] simple ball counter on left (BALLS, newline, the count)
   - [x] score on right (SCORE, newline, the score)
+  - [ ] add sound to peg destruction
 
 ## beta featrures
 

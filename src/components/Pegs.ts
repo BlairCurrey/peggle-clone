@@ -11,6 +11,8 @@ type PegsConfig = PegConfig[];
 export class Pegs {
   scene!: Phaser.Scene;
   group!: Phaser.Physics.Arcade.Group;
+  // TODO: add id to peg and collect that instead of the entire object
+  private pegsToDestroy: AnyPeg[] = [];
 
   constructor(scene: Phaser.Scene, pegsConfig: PegsConfig) {
     this.scene = scene;
@@ -32,5 +34,20 @@ export class Pegs {
     return this.group
       .getChildren()
       .filter((child: AnyPeg) => child.pegType === PegType.TARGET).length;
+  }
+
+  queuePegForDestruction(peg: AnyPeg) {
+    this.pegsToDestroy.push(peg);
+  }
+
+  destroy() {
+    this.pegsToDestroy.forEach((peg: AnyPeg, i: number) => {
+      // TODO: this is bugged - will destroy after win check
+      // wont detect win until turn after hitting all targets
+      // setTimeout(() => {
+      //   peg.destroy();
+      // }, i * 200); // destory pegs one by one
+      peg.destroy();
+    });
   }
 }
