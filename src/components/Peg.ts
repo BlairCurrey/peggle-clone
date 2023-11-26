@@ -69,7 +69,7 @@ export function createPegByType(
   }
 }
 
-class CommonPeg extends Peg {
+export class CommonPeg extends Peg {
   get pegType() {
     return PegType.COMMON;
   }

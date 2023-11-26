@@ -1,10 +1,10 @@
 import * as Phaser from "phaser";
 import { Ball } from "../components/Ball";
-import { Pegs } from "../components/Pegs";
+import { PegConfig, Pegs } from "../components/Pegs";
 import { GameStateManager } from "../utils/GameStateManager";
 import { HUD } from "../components/HUD";
 import { AudioKey } from "../config/audio";
-import { generateRandomPegs } from "../utils/generateRandomPegs";
+import { generateRandomPegs, queryParamsToPegConfig } from "../utils";
 import { Border } from "../components/Border";
 import { AnyPeg } from "../components/Peg";
 
@@ -21,12 +21,12 @@ export class Game extends Phaser.Scene {
   }
 
   create() {
-    this.isGameOver = false;
+    this.isGameOver = false; // must be reset here because scene is reused
     this.gameStateManager = new GameStateManager();
     this.backgroundMusic = this.sound.add(AudioKey.BACKGROUND1);
     this.backgroundMusic.play({ loop: true });
     this.hud = new HUD(this);
-    this.pegs = new Pegs(this, generateRandomPegs(this, 5));
+    this.pegs = new Pegs(this, this.getPegConfig());
     this.ball = this.spawnBall();
     new Border(this);
   }
@@ -94,7 +94,35 @@ export class Game extends Phaser.Scene {
     );
   }
 
-  restartScene() {
+  private getPegConfig() {
+    // loads from query params, else generates random pegs.
+    // Example query params:
+    // localhost:10001/?pegs[0][x]=305&pegs[0][y]=300&pegs[0][type]=common&pegs[1][x]=200&pegs[1][y]=150&pegs[1][type]=target
+    // parses to:
+    // [
+    //   { x: 305, y: 300, type: PegType.COMMON },
+    //   { x: 200, y: 150, type: PegType.TARGET },
+    // ];
+    let pegConfig: PegConfig[] = [];
+
+    try {
+      pegConfig = queryParamsToPegConfig(
+        new URLSearchParams(window.location.search)
+      );
+      if (pegConfig.length === 0) {
+        throw new Error("No pegs found in query params");
+      }
+    } catch (error) {
+      console.warn(
+        "Failed to parse peg config from query params. Falling back to random pegs."
+      );
+      pegConfig = generateRandomPegs(this, 5);
+    }
+
+    return pegConfig;
+  }
+
+  private restartScene() {
     this.gameStateManager.reset();
     this.gameStateManager = undefined;
     this.backgroundMusic.stop();

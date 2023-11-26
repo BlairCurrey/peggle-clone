@@ -11,7 +11,8 @@ const config: Phaser.Types.Core.GameConfig = {
   physics: {
     default: "arcade",
     arcade: {
-      // debug: true,
+      debug:
+        new URLSearchParams(window.location.search).get("debug") === "true",
       // alternatively, set in scene create with this.physics.world.setBounds
       checkCollision: {
         up: true,

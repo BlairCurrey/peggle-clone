@@ -124,6 +124,7 @@ Can test npm `build` command by running `dist/index.html` on a local server (suc
   - [x] simple ball counter on left (BALLS, newline, the count)
   - [x] score on right (SCORE, newline, the score)
   - [ ] add sound to peg destruction
+- [x] load level from query params
 
 ## beta featrures
 
@@ -131,6 +132,7 @@ Can test npm `build` command by running `dist/index.html` on a local server (suc
 - [ ] slow time if ball is on path for peg (within some small margin of error). `this.physics.world.timeScale = 1.5;` might be hard to do. maybe take the distance and velocity of ball. if distance is closing at the same rate as velocity, slow time. I think this would mean 1: it's getting closer, and 2: it's getting closer at the rate you would expect if it were heading right for it. I guess this would only work for last peg, because last peg of certain type could have something blocking it.
 - [ ] batch points in turn and "flush" to score at end. show score incrementing at end of turn in middle of scren (large) and then increment score in HUD. or another interesting animation. Maybe a vertical bar that fills up then empties at end of turn with a soudn effect and a number incrementing about the bar.
 - [ ] show lives as ball
+- [ ] handle case where ball gets "stuck" and pegs never disappear. need to test to confirm, but since pegs dont disapear until the ball exits the screen this must happen anytime the ball gets stuck between pegs.
 
 ## open questions
 
@@ -182,6 +184,8 @@ Also, on the "Lots of Orange Pegs" challenges, the Fever Meter will be frozen un
 ```
 
 # Build Sprite from graphics
+
+graphics.generateTexture: https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.Graphics.html#:~:text=Graphics%23generateTexture.,textures%2C%20which%20will%20consume%20memory.
 
 may be useful for non-round pegs that I want to use a sprite for.
 
