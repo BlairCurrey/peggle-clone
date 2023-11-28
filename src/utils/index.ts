@@ -3,6 +3,14 @@ import { PegType, pegTypes } from "../components/Peg";
 import { PegConfig } from "../components/Pegs";
 import { GameConfig } from "../config/game";
 
+export function getCurrentLevelLink(pegConfig: PegConfig[]) {
+  const url = new URL(window.location.href);
+  const queryParams = pegConfigToQueryParams(pegConfig);
+  const decodedQueryParams = decodeURI(queryParams.toString());
+  url.search = decodedQueryParams;
+  return url.href;
+}
+
 export function pegConfigToQueryParams(pegConfig: PegConfig[]) {
   const queryParams = new URLSearchParams();
   pegConfig.forEach((peg, index) => {
@@ -12,6 +20,12 @@ export function pegConfigToQueryParams(pegConfig: PegConfig[]) {
   });
   return queryParams;
 }
+
+// use in browser to get current pegConfig
+(window as any).getCurrentPegConfig = () =>
+  console.log(
+    queryParamsToPegConfig(new URLSearchParams(window.location.search))
+  );
 
 export function queryParamsToPegConfig(queryParams: URLSearchParams) {
   const pegConfig: PegConfig[] = [];

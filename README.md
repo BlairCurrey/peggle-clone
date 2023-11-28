@@ -25,9 +25,11 @@ Can test npm `build` command by running `dist/index.html` on a local server (suc
 - [x] in Pegs, instead of `group.create`, create sprite/image and do `group.add` (or similar) to control type of object added to group
 - [ ] dependency injection? basically anywhere i am importing and then running something could have those things passed in. maybe make a super simple container (all singleton?)
 - [x] move image,audio from util to config
-- [ ] deploy to github pages?
+- [x] deploy to github pages?
 - [ ] make new class for the Ball aimer?
-- [ ] make the spawnBall and collision handler part of the Ball class? Peg? Pegs?
+- [x] make the spawnBall and collision handler part of the Ball class? Peg? Pegs?
+
+  - ended up making it a function on the peg itself: `CommonPeg.onHit(peg: Pegs)`
 
   - ball:
 
@@ -70,6 +72,7 @@ Can test npm `build` command by running `dist/index.html` on a local server (suc
   - alternatively, could name the phaser group objects and do `this.group.children.getByName('string-name');` as shown here: https://phaser.discourse.group/t/get-a-gameobject-by-its-id/1378
   - or if I have the indexes (probably matches create order?) `this.group.getChildren([0])`: https://stackoverflow.com/questions/56082396/how-to-get-a-single-member-from-a-group-in-phaser-3
     - I think I like this less than the id. its basically an id "local" to the group. IE, different groups would also have a 0 index which means the index alone isnt enough to find the specific peg. Also, in the collision handler callback, I dont think I will have the id which makes this moot.
+- [ ] refactor Peg/CommonPeg etc. relationship. Compositive vs. inheritance basically. See code comment TODO
 
 ## alpha features
 
@@ -115,19 +118,20 @@ Can test npm `build` command by running `dist/index.html` on a local server (suc
 - [ ] "real" levels.
   - [ ] on game start, place all pegs for the level (static positions, not random). from something that can be represented as json (could just be list of {x, y}). then randomly change some (5?) to target pegs. Or dont change them, but init as correct type initially. But the level should have pegs in the same position each time and not determine which position is which type until the level is generated. see https://peggle.fandom.com/wiki/Insane_Aquarium?file=Insaneaquarium.png
   - [ ] on each new turn, set a `CommonPeg` to `BonusPeg`
-- [ ] "Special" pegs
-  - [ ] New `SpecialPeg` class with new sprite. maybe 10 points, like CommonPeg?
-  - [ ] just one type for now. "blast"? (hits pegs within a certain radius of itself) multi-ball (shoots a new ball out?)
+- [x] "Special" pegs
+  - [x] New `SpecialPeg` class with new sprite. maybe 10 points, like CommonPeg?
+  - [x] just one type for now. "blast"? (hits pegs within a certain radius of itself) multi-ball (shoots a new ball out?)
 - [x] update HUD
   - [x] pick more interesting (maybe this? https://www.dafont.com/silkscreen.font).
     - monospace for now
   - [x] simple ball counter on left (BALLS, newline, the count)
   - [x] score on right (SCORE, newline, the score)
-  - [ ] add sound to peg destruction
+  - [x] add sound to peg destruction
 - [x] load level from query params
 
 ## beta featrures
 
+- [ ] increase playback rate (pitch) of sound on each hit (up to some max)
 - [ ] aimer can also be controlled with mouse and fired with click
 - [ ] slow time if ball is on path for peg (within some small margin of error). `this.physics.world.timeScale = 1.5;` might be hard to do. maybe take the distance and velocity of ball. if distance is closing at the same rate as velocity, slow time. I think this would mean 1: it's getting closer, and 2: it's getting closer at the rate you would expect if it were heading right for it. I guess this would only work for last peg, because last peg of certain type could have something blocking it.
 - [ ] batch points in turn and "flush" to score at end. show score incrementing at end of turn in middle of scren (large) and then increment score in HUD. or another interesting animation. Maybe a vertical bar that fills up then empties at end of turn with a soudn effect and a number incrementing about the bar.

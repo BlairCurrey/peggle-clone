@@ -2,16 +2,32 @@ import * as Phaser from "phaser";
 import { AudioKey } from "../config/audio";
 import { GameConfig } from "../config/game";
 import { ImageKey } from "../config/images";
+import { Pegs } from "./Pegs";
+import { GameStateManager } from "../utils/GameStateManager";
 
 export enum PegType {
   COMMON = "common",
   TARGET = "target",
   BONUS = "bonus",
+  SPECIAL = "special",
 }
 export const pegTypes: PegType[] = Object.values(PegType);
 
-export type AnyPeg = CommonPeg | TargetPeg | BonusPeg;
+export type AnyPeg = CommonPeg | TargetPeg | BonusPeg | SpecialPeg;
 
+// TODO: Refactor abstact Peg / CommonPeg extends Peg etc.
+
+// Option 1:
+// Make new BasePeg class the extends this. All pegs would extend BasePeg.
+// Make onHit an abstract method here and move implementation to BasePeg
+// Fixes queuePegForDestruction ts error here.
+// Also might move the imageKey getters and similar (anything that assumes something about the subclass).
+
+// Option 2:
+// Composition over inheritance. Make Peg a class that has a abstract Peg instance.
+// Anything currently exposed on peg would be wrapped by CommonPeg, etc. (at least onHit, anything else?)
+// Specific attributes unique to pegs (blastRadius on SpecialPeg) would live on SpecialPeg with no conflict to underlying Peg.
+// Could be combined with changing abstract Peg to a non-abstract BasePeg if that also makes sense.
 abstract class Peg extends Phaser.Physics.Arcade.Image {
   abstract pegType: PegType;
   // these "getters" allow calling `this.imageKey` (and simmilar) in this abstract class's
@@ -20,11 +36,10 @@ abstract class Peg extends Phaser.Physics.Arcade.Image {
   abstract get imageKey(): ImageKey;
   abstract get basePoints(): number;
 
-  sound: Phaser.Sound.BaseSound;
+  gameStateManager!: GameStateManager;
 
   wasHit: boolean = false;
   size: number = GameConfig.PEG_SIZE;
-  audioKey: AudioKey = AudioKey.BLASTER3;
 
   constructor(
     x: number,
@@ -42,11 +57,17 @@ abstract class Peg extends Phaser.Physics.Arcade.Image {
     this.setDisplaySize(this.size, this.size).setCircle(this.width / 2);
     this.setImmovable(true);
 
-    this.sound = scene.sound.add(this.audioKey);
+    this.gameStateManager = new GameStateManager(); // gets existing via singleton
   }
 
-  playSound() {
-    this.sound.play({ rate: 5 });
+  onHit(pegs: Pegs) {
+    if (!this.wasHit) {
+      this.wasHit = true;
+      this.setAlpha(0.3);
+      this.gameStateManager.incrementScore(this.basePoints);
+      // "this" will be AnyPeg (CommonPeg, TargetPeg, etc.) when called on sublass
+      pegs.queuePegForDestruction(this as unknown as AnyPeg);
+    }
   }
 }
 
@@ -64,7 +85,10 @@ export function createPegByType(
       return new TargetPeg(x, y, scene, group);
     case PegType.BONUS:
       return new BonusPeg(x, y, scene, group);
+    case PegType.SPECIAL:
+      return new SpecialPeg(x, y, scene, group);
     default:
+      const exhaustiveCheck: never = type; // ensures ts error if cases dont exhaust PegType
       throw new Error(`Unknown peg type: ${type}`);
   }
 }
@@ -80,6 +104,10 @@ export class CommonPeg extends Peg {
     return ImageKey.ORB_BLUE;
   }
 
+  audioKey: AudioKey = AudioKey.BLASTER3;
+
+  sound: Phaser.Sound.BaseSound;
+
   constructor(
     x: number,
     y: number,
@@ -87,6 +115,14 @@ export class CommonPeg extends Peg {
     group: Phaser.Physics.Arcade.Group
   ) {
     super(x, y, scene, group);
+    this.sound = scene.sound.add(this.audioKey);
+  }
+
+  onHit(pegs: Pegs, opts: { silent: boolean } = { silent: false }) {
+    if (!opts.silent) {
+      this.sound.play({ rate: 5 });
+    }
+    super.onHit(pegs);
   }
 }
 
@@ -101,6 +137,10 @@ class TargetPeg extends Peg {
     return ImageKey.ORB_GREEN_2;
   }
 
+  audioKey: AudioKey = AudioKey.BLASTER3;
+
+  sound: Phaser.Sound.BaseSound;
+
   constructor(
     x: number,
     y: number,
@@ -108,6 +148,14 @@ class TargetPeg extends Peg {
     group: Phaser.Physics.Arcade.Group
   ) {
     super(x, y, scene, group);
+    this.sound = scene.sound.add(this.audioKey);
+  }
+
+  onHit(pegs: Pegs, opts: { silent: boolean } = { silent: false }) {
+    if (!opts.silent) {
+      this.sound.play({ rate: 5 });
+    }
+    super.onHit(pegs);
   }
 }
 
@@ -122,6 +170,10 @@ class BonusPeg extends Peg {
     return ImageKey.ORB_PINK;
   }
 
+  audioKey: AudioKey = AudioKey.BLASTER3;
+
+  sound: Phaser.Sound.BaseSound;
+
   constructor(
     x: number,
     y: number,
@@ -129,5 +181,58 @@ class BonusPeg extends Peg {
     group: Phaser.Physics.Arcade.Group
   ) {
     super(x, y, scene, group);
+    this.sound = scene.sound.add(this.audioKey);
+  }
+
+  onHit(pegs: Pegs, opts: { silent: boolean } = { silent: false }) {
+    if (!opts.silent) {
+      this.sound.play({ rate: 5 });
+    }
+    super.onHit(pegs);
+  }
+}
+
+// Hardcode as AOE explosion, but may want to split this into
+// different types when adding additional special pegs
+export class SpecialPeg extends Peg {
+  blastRadius: number = 175;
+
+  get pegType() {
+    return PegType.SPECIAL;
+  }
+  get basePoints() {
+    return 10;
+  }
+  get imageKey() {
+    return ImageKey.ORB_YELLOW;
+  }
+
+  sound: Phaser.Sound.BaseSound;
+
+  audioKey: AudioKey = AudioKey.EXPLOSION12A;
+
+  constructor(
+    x: number,
+    y: number,
+    scene: Phaser.Scene,
+    group: Phaser.Physics.Arcade.Group
+  ) {
+    super(x, y, scene, group);
+    this.sound = scene.sound.add(this.audioKey);
+  }
+
+  onHit(pegs: Pegs) {
+    if (!this.wasHit) {
+      this.sound.play();
+    }
+    super.onHit(pegs);
+
+    // trigger onHit for each peg within blast radius
+    pegs
+      .getPegsWithinRadius(this.x, this.y, this.blastRadius)
+      .forEach((peg) => {
+        if (peg === this || peg.wasHit) return;
+        peg.onHit(pegs, { silent: true });
+      });
   }
 }

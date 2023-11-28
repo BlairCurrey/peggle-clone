@@ -13,6 +13,7 @@ export enum AudioKey {
   BLASTER4 = "blaster4",
   BLASTER5 = "blaster5",
   BACKGROUND1 = "background1",
+  EXPLOSION12A = "explosion",
 }
 
 const pathByAudioKey: { [key in AudioKey]: string } = {
@@ -22,4 +23,5 @@ const pathByAudioKey: { [key in AudioKey]: string } = {
   [AudioKey.BLASTER4]: "assets/audio/blaster4.mp3",
   [AudioKey.BLASTER5]: "assets/audio/blaster5.mp3",
   [AudioKey.BACKGROUND1]: "assets/audio/psykick-112469.mp3",
+  [AudioKey.EXPLOSION12A]: "assets/audio/explosion.wav",
 };

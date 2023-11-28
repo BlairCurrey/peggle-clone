@@ -4,7 +4,11 @@ import { PegConfig, Pegs } from "../components/Pegs";
 import { GameStateManager } from "../utils/GameStateManager";
 import { HUD } from "../components/HUD";
 import { AudioKey } from "../config/audio";
-import { generateRandomPegs, queryParamsToPegConfig } from "../utils";
+import {
+  generateRandomPegs,
+  getCurrentLevelLink,
+  queryParamsToPegConfig,
+} from "../utils";
 import { Border } from "../components/Border";
 import { AnyPeg } from "../components/Peg";
 
@@ -66,32 +70,17 @@ export class Game extends Phaser.Scene {
   private spawnBall() {
     const ball = new Ball(this);
     this.gameStateManager.decrementBallCount();
-    this.addBallPegCollision(ball);
+    this.physics.add.collider(
+      ball.sprite,
+      this.pegs.group,
+      (ball: Ball["sprite"], peg: AnyPeg) => peg.onHit(this.pegs)
+    );
     return ball;
   }
 
   private endTurn() {
     this.ball.destroy();
     this.pegs.destroy();
-  }
-
-  private addBallPegCollision(ball: Ball) {
-    const handleBallPegCollision = (ball: Ball["sprite"], peg: AnyPeg) => {
-      peg.playSound();
-      if (!peg.wasHit) {
-        peg.wasHit = true;
-        this.gameStateManager.incrementScore(peg.basePoints);
-      }
-
-      peg.setAlpha(0.3);
-      this.pegs.queuePegForDestruction(peg);
-    };
-
-    this.physics.add.collider(
-      ball.sprite,
-      this.pegs.group,
-      handleBallPegCollision
-    );
   }
 
   private getPegConfig() {
@@ -118,6 +107,8 @@ export class Game extends Phaser.Scene {
       );
       pegConfig = generateRandomPegs(this, 5);
     }
+
+    console.log(`Level link: ${getCurrentLevelLink(pegConfig)}`);
 
     return pegConfig;
   }

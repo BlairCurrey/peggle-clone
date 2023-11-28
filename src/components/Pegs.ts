@@ -33,7 +33,7 @@ export class Pegs {
     // TODO: optimize this by storing the count and updating it when pegs are destroyed
     return this.group
       .getChildren()
-      .filter((child: AnyPeg) => child.pegType === PegType.TARGET).length;
+      .filter((peg: AnyPeg) => peg.pegType === PegType.TARGET).length;
   }
 
   queuePegForDestruction(peg: AnyPeg) {
@@ -49,5 +49,12 @@ export class Pegs {
       // }, i * 200); // destory pegs one by one
       peg.destroy();
     });
+  }
+
+  getPegsWithinRadius(x: number, y: number, radius: number) {
+    return this.group.getChildren().filter((peg: AnyPeg) => {
+      const distance = Phaser.Math.Distance.Between(x, y, peg.x, peg.y);
+      return distance < radius;
+    }) as AnyPeg[];
   }
 }
